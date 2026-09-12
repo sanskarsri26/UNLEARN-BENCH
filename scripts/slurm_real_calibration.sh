@@ -3,8 +3,8 @@
 #SBATCH --partition=htc
 #SBATCH --gres=gpu:a100:1
 #SBATCH --time=01:00:00
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=48G
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=24G
 #SBATCH --output=outputs/slurm_logs/real_calibration-%j.out
 
 set -euo pipefail
