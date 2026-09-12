@@ -1,5 +1,6 @@
 name: controlled-calibration-mamba-130m-v1
 track: controlled_unlearning
+claim_status: exploratory
 model: mamba_130m
 dataset: controlled_v1
 device: cuda

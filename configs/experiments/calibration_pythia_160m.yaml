@@ -1,5 +1,6 @@
 name: controlled-calibration-pythia-160m-v1
 track: controlled_unlearning
+claim_status: exploratory
 model: pythia_160m
 dataset: controlled_v1
 device: cuda

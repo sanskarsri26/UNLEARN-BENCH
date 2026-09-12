@@ -1,5 +1,6 @@
 name: controlled-main-pythia-v1
 track: controlled_unlearning
+claim_status: confirmatory
 device: auto
 precision: fp32
 allow_mps_fallback: false

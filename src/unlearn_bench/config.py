@@ -7,7 +7,15 @@ import yaml
 
 from unlearn_bench.utils.device import DEVICE_CHOICES, PRECISION_CHOICES
 
-REQUIRED_EXPERIMENT_KEYS = {"name", "track", "model", "dataset", "methods", "seeds"}
+REQUIRED_EXPERIMENT_KEYS = {
+    "name",
+    "track",
+    "claim_status",
+    "model",
+    "dataset",
+    "methods",
+    "seeds",
+}
 
 
 def load_yaml(path: str | Path) -> dict[str, Any]:
@@ -25,6 +33,8 @@ def validate_experiment(config: dict[str, Any]) -> None:
         raise ValueError(f"Experiment is missing keys: {sorted(missing)}")
     if config["track"] != "controlled_unlearning":
         raise ValueError("Only the controlled_unlearning track is executable in the reboot v0.1")
+    if config["claim_status"] not in {"exploratory", "confirmatory"}:
+        raise ValueError("claim_status must be exploratory or confirmatory")
     if not config["methods"] or not config["seeds"]:
         raise ValueError("methods and seeds must be non-empty")
     if len(set(config["seeds"])) != len(config["seeds"]):

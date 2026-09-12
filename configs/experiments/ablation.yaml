@@ -1,5 +1,6 @@
 name: controlled-pcgu-ablation-v1
 track: controlled_unlearning
+claim_status: exploratory
 device: auto
 precision: auto
 allow_mps_fallback: false

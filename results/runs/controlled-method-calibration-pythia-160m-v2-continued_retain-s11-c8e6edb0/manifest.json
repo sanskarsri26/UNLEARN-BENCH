@@ -6,7 +6,7 @@
   "checkpoint_size_bytes": 79,
   "checkpoint_status": "metadata_only",
   "checkpoint_write_seconds": 0.0030836760997772217,
-  "claim_status": "confirmatory",
+  "claim_status": "exploratory",
   "configuration": {
     "experiment": {
       "allow_mps_fallback": false,
@@ -215,6 +215,12 @@
   "peak_vram_bytes": 7209322496,
   "predictions_path": "results/runs/controlled-method-calibration-pythia-160m-v2-continued_retain-s11-c8e6edb0/predictions.jsonl",
   "preprocessing_seconds": 0.004540866240859032,
+  "provenance_correction": {
+    "field": "claim_status",
+    "from": "confirmatory",
+    "reason": "Runner inferred status from experiment name instead of explicit configuration.",
+    "to": "exploratory"
+  },
   "random_seed": 11,
   "reproducibility": {
     "bitwise_scope": "same software and device stack only",

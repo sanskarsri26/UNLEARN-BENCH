@@ -6,7 +6,7 @@
   "checkpoint_size_bytes": 79,
   "checkpoint_status": "metadata_only",
   "checkpoint_write_seconds": 0.0021276231855154037,
-  "claim_status": "confirmatory",
+  "claim_status": "exploratory",
   "configuration": {
     "experiment": {
       "allow_mps_fallback": false,
@@ -205,6 +205,12 @@
   "peak_vram_bytes": 3693583872,
   "predictions_path": "results/runs/controlled-calibration-mamba-130m-v1-trained_full-s11-5ac24eb7/predictions.jsonl",
   "preprocessing_seconds": 0.006174549460411072,
+  "provenance_correction": {
+    "field": "claim_status",
+    "from": "confirmatory",
+    "reason": "Runner inferred status from experiment name instead of explicit configuration.",
+    "to": "exploratory"
+  },
   "random_seed": 11,
   "reproducibility": {
     "bitwise_scope": "same software and device stack only",

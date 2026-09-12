@@ -325,7 +325,7 @@ def run_experiment(
                 "timestamp_utc": timestamp,
                 "git_commit": git_commit(root),
                 "track": config["track"],
-                "claim_status": "exploratory" if "smoke" in config["name"] else "confirmatory",
+                "claim_status": config["claim_status"],
                 "model_name": model_config["name"],
                 "model_repository": model_config.get("repository"),
                 "model_revision": model_config["revision"],
