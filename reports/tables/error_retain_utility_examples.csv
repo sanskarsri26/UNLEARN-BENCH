@@ -1,0 +1,337 @@
+model,method,partition,id,group_id,prompt,target,loss_mean,loss_delta_vs_full_mean,loss_delta_vs_full_sd
+pythia-160m,continued_retain,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.056257801867711045,-0.0956124811200425,0.1375317550136468
+pythia-160m,continued_retain,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.0010451011961170782,-0.02644969628696951,0.01821451073713613
+pythia-160m,continued_retain,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,0.08243498850303392,-1.6790240441914648,0.661376644731591
+pythia-160m,continued_retain,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.3152660185781618,-0.056603125762194395,0.15913143239626198
+pythia-160m,continued_retain,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.06110488871733347,-1.2389573901891708,1.1885496689775168
+pythia-160m,continued_retain,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.8591307004292806,-0.40371233224868774,0.6731032548273045
+pythia-160m,continued_retain,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.6557451610763868,-0.06259118268887202,0.6343782421606324
+pythia-160m,continued_retain,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,0.23728386809428534,-0.35104616234699887,0.26391901698342884
+pythia-160m,continued_retain,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.2923843562602997,-1.3609403272469838,0.8331090708231659
+pythia-160m,continued_retain,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,1.5305071274439495,0.18879473209381104,0.6982932872765163
+pythia-160m,continued_retain,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,1.936856875816981,0.30916548768679303,2.453335479004084
+pythia-160m,continued_retain,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,2.012712240219116,-0.14447585741678873,0.1691761318531876
+pythia-160m,continued_retain,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,4.351417541503906,-0.9458136558532715,0.9346343545188815
+pythia-160m,continued_retain,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,1.1646680037180583,-0.3174504041671753,0.06481469640953975
+pythia-160m,continued_retain,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,3.3882548809051514,-2.4493059317270913,1.4641745189501376
+pythia-160m,continued_retain,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,5.821151574452718,0.4905085563659668,0.7717222132243503
+pythia-160m,continued_retain,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,5.616332213083903,-2.3395110766092935,0.8640929257099628
+pythia-160m,continued_retain,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,4.1304505666097,-0.37707797686258954,0.26140839705209445
+pythia-160m,continued_retain,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,5.282299836476644,1.4500308831532795,0.7281315692159569
+pythia-160m,continued_retain,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,5.1125508944193525,0.7597301006317139,0.4340443421047441
+pythia-160m,continued_retain,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,6.276824792226155,0.5702912012736002,0.42335596915263446
+pythia-160m,continued_retain,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,3.3320415019989014,-0.09943381945292155,0.18315901713957558
+pythia-160m,continued_retain,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,8.166469097137451,0.06645043690999348,0.845446209148062
+pythia-160m,continued_retain,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.685950438181559,0.16765602429707846,0.1716630842740425
+pythia-160m,continued_retain,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.437974770863851,0.25617027282714844,0.2957841676622561
+pythia-160m,continued_retain,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,3.187678496042887,0.27143144607543945,0.597106219227116
+pythia-160m,continued_retain,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,2.6411831776301065,0.11599282423655193,0.6820364612290711
+pythia-160m,continued_retain,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.22363805770874,-0.23117939631144205,0.7175972211734317
+pythia-160m,sham,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.1520143300294876,0.00014404704173405966,0.0006882619865648527
+pythia-160m,sham,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.02748506050556898,-9.736977517604828e-06,3.1404851385995185e-05
+pythia-160m,sham,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.7622936566670735,0.0008346239725748698,0.003493152244759969
+pythia-160m,sham,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.371375339726607,-0.0004938046137491862,0.0007588619611857322
+pythia-160m,sham,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,1.3017582297325134,0.0016959508260091145,0.003358930130980646
+pythia-160m,sham,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,1.2620532313982646,-0.000789801279703776,0.0013180784698984228
+pythia-160m,sham,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.7182498772939047,-8.646647135416667e-05,0.0018704289165491523
+pythia-160m,sham,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,0.5881705979506174,-0.00015943249066670737,0.0007929915503962939
+pythia-160m,sham,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,1.6522280375162761,-0.001096645991007487,0.002479410962156399
+pythia-160m,sham,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,1.342672049999237,0.0009596546490987142,0.004337223169768297
+pythia-160m,sham,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,1.6274551749229431,-0.00023621320724487305,0.0007548778318217951
+pythia-160m,sham,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,2.1565850575764975,-0.0006030400594075521,0.0017774125433265627
+pythia-160m,sham,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,5.300006707509358,0.0027755101521809897,0.002304402599049552
+pythia-160m,sham,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,1.4815788269042969,-0.0005395809809366862,0.000618818399795347
+pythia-160m,sham,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,5.836489836374919,-0.0010709762573242188,0.0029986255295960345
+pythia-160m,sham,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,5.33114767074585,0.0005046526590983073,0.002003566319252161
+pythia-160m,sham,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,7.956238269805908,0.00039498011271158856,0.0006893357473876768
+pythia-160m,sham,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,4.510120789210002,0.0025922457377115884,0.0018718003395098947
+pythia-160m,sham,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,3.8329714934031167,0.0007025400797526041,0.0019563722283444038
+pythia-160m,sham,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,4.354094505310059,0.0012737115224202473,0.0005155722437415401
+pythia-160m,sham,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.7071793874104815,0.0006457964579264323,0.0006258925619396219
+pythia-160m,sham,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,3.4312450091044107,-0.00023031234741210938,0.0003442382031774179
+pythia-160m,sham,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,8.100247383117676,0.00022872289021809897,0.0027663886123566873
+pythia-160m,sham,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.518048127492269,-0.00024628639221191406,0.00039681683815769617
+pythia-160m,sham,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.180528958638509,-0.0012755393981933594,0.001579876284426508
+pythia-160m,sham,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,2.916312058766683,6.500879923502605e-05,0.0009026530028690602
+pythia-160m,sham,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,2.5254111289978027,0.00022077560424804688,0.004941545327670057
+pythia-160m,sham,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.455767631530762,0.0009501775105794271,0.002482963808446508
+pythia-160m,counterfactual,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.11051622157295544,-0.0413540614147981,0.11895122029805719
+pythia-160m,counterfactual,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.06649174665411313,0.03899694917102655,0.019030995509939905
+pythia-160m,counterfactual,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,0.3418228228886922,-1.4196362098058064,0.7273034264110967
+pythia-160m,counterfactual,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.49760164817174274,0.12573250383138657,0.2679264461245158
+pythia-160m,counterfactual,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.21011068175236383,-1.0899515971541405,1.2474490176130997
+pythia-160m,counterfactual,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.7171281476815542,-0.5457148849964142,0.9057198293938008
+pythia-160m,counterfactual,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.31335553030172986,-0.40498081346352893,0.30632472227532054
+pythia-160m,counterfactual,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,0.6134905318419138,0.02516050140062968,0.2159466589030669
+pythia-160m,counterfactual,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.579508567849795,-1.0738161156574886,0.285471880305229
+pythia-160m,counterfactual,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,1.1070573727289836,-0.23465502262115479,0.8509417654437799
+pythia-160m,counterfactual,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.9561983148256937,-0.6714930733044943,0.1813074183636613
+pythia-160m,counterfactual,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,1.7635388374328613,-0.39364926020304364,0.5428732659864186
+pythia-160m,counterfactual,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,4.596905549367269,-0.7003256479899088,0.8346261265267474
+pythia-160m,counterfactual,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,1.4240808884302776,-0.058037519454956055,0.28918744188449425
+pythia-160m,counterfactual,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,4.723185141881307,-1.1143756707509358,1.1012391199346594
+pythia-160m,counterfactual,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,4.549172878265381,-0.7814701398213705,0.9545493767785188
+pythia-160m,counterfactual,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,6.8925503094991045,-1.0632929801940918,1.0678561580018937
+pythia-160m,counterfactual,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,4.162708123524983,-0.34482041994730633,0.8822152776750802
+pythia-160m,counterfactual,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,4.451026042302449,0.6187570889790853,0.2311343991266504
+pythia-160m,counterfactual,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,4.635613441467285,0.2827926476796468,0.2631261480880645
+pythia-160m,counterfactual,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.97665802637736,0.2701244354248047,0.08567049962025328
+pythia-160m,counterfactual,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,3.5267767906188965,0.09530146916707356,0.25901163179019365
+pythia-160m,counterfactual,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,8.144150416056315,0.04413175582885742,0.29236619816935183
+pythia-160m,counterfactual,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.5748510360717773,0.05655662218729655,0.06839581148924892
+pythia-160m,counterfactual,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.076104482014974,-0.10570001602172852,0.13701688058417452
+pythia-160m,counterfactual,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,3.140423854192098,0.22417680422465006,0.20963285918259034
+pythia-160m,counterfactual,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.092476765314738,0.5672864119211832,0.5047933118901424
+pythia-160m,counterfactual,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.421011447906494,-0.03380600611368815,0.15104326914910893
+pythia-160m,gradient_ascent,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.152605801820755,0.0007355188330014547,0.010492748610328983
+pythia-160m,gradient_ascent,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.034531057346612215,0.007036259863525629,0.010478373791073525
+pythia-160m,gradient_ascent,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.4827121098836262,-0.2787469228108724,0.23025476587696073
+pythia-160m,gradient_ascent,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.29197518279155094,-0.07989396154880524,0.19141933470557865
+pythia-160m,gradient_ascent,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.8837489386399587,-0.4163133402665456,0.7582962535960543
+pythia-160m,gradient_ascent,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,1.0398475527763367,-0.22299547990163168,0.13100398511677422
+pythia-160m,gradient_ascent,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.6925006409486135,-0.025835702816645306,0.024872644886831014
+pythia-160m,gradient_ascent,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,0.6294394632180532,0.041109432776769005,0.05408746815613543
+pythia-160m,gradient_ascent,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,1.6137700478235881,-0.03955463568369547,0.16616308900306398
+pythia-160m,gradient_ascent,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,1.1811562577883403,-0.1605561375617981,0.20158735333905936
+pythia-160m,gradient_ascent,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,1.5629364450772603,-0.06475494305292766,0.3200132875237836
+pythia-160m,gradient_ascent,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,2.022106130917867,-0.13508196671803793,0.11194481390032977
+pythia-160m,gradient_ascent,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,5.370340029398601,0.07310883204142253,0.04956238585505866
+pythia-160m,gradient_ascent,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,1.5091472864151,0.027028878529866535,0.03800869513369525
+pythia-160m,gradient_ascent,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,5.778573671976726,-0.05898714065551758,0.0366599875903983
+pythia-160m,gradient_ascent,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,5.221479256947835,-0.10916376113891602,0.08686554260720258
+pythia-160m,gradient_ascent,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,7.929385662078857,-0.02645762761433919,0.15991100818843004
+pythia-160m,gradient_ascent,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,4.30970565478007,-0.19782288869222006,0.16808865985298466
+pythia-160m,gradient_ascent,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,3.7711170514424643,-0.06115190188090006,0.06417984981075849
+pythia-160m,gradient_ascent,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,4.305570920308431,-0.04724987347920736,0.05120574101557073
+pythia-160m,gradient_ascent,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.7695746421813965,0.06304105122884114,0.03496197180483119
+pythia-160m,gradient_ascent,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,3.4423022270202637,0.010826905568440756,0.017607823237846765
+pythia-160m,gradient_ascent,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,8.057303110758463,-0.04271554946899414,0.02611750291984263
+pythia-160m,gradient_ascent,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.5202449957529702,0.0019505818684895833,0.012907715058830847
+pythia-160m,gradient_ascent,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.1482876141866045,-0.033516883850097656,0.007059752588615574
+pythia-160m,gradient_ascent,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,2.8501670360565186,-0.06608001391092937,0.08204945683202194
+pythia-160m,gradient_ascent,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,2.504092534383138,-0.021097819010416668,0.021823598273996533
+pythia-160m,gradient_ascent,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.419060071309407,-0.03575738271077474,0.052593325909078545
+pythia-160m,npo,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.1570302645365397,0.005159981548786163,0.011170748486533493
+pythia-160m,npo,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.0336975489432613,0.00620275146017472,0.009141598433167397
+pythia-160m,npo,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.545292615890503,-0.21616641680399576,0.20870998240643626
+pythia-160m,npo,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.3130182685951392,-0.058850875745217,0.16596284463883432
+pythia-160m,npo,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.9584557215372721,-0.3416065573692322,0.6716636345227378
+pythia-160m,npo,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,1.0511319041252136,-0.21171112855275473,0.14507662599040222
+pythia-160m,npo,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.6965298354625702,-0.0218065083026886,0.021629535000160342
+pythia-160m,npo,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,0.6205597718556722,0.03222974141438802,0.049882470596069414
+pythia-160m,npo,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,1.641197959582011,-0.012126723925272623,0.15228173836664594
+pythia-160m,npo,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,1.2039114634195964,-0.137800931930542,0.16920859518997228
+pythia-160m,npo,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,1.5924330552419026,-0.03525833288828532,0.29605997698287495
+pythia-160m,npo,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,2.0271341800689697,-0.1300539175669352,0.11786803354051822
+pythia-160m,npo,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,5.367635091145833,0.0704038937886556,0.06070045393024692
+pythia-160m,npo,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,1.49640953540802,0.014291127522786459,0.03760888805903725
+pythia-160m,npo,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,5.811016241709392,-0.026544570922851562,0.025090172673279117
+pythia-160m,npo,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,5.239101092020671,-0.09154192606608073,0.062017855092777144
+pythia-160m,npo,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,7.957994302113851,0.002151012420654297,0.15886233125061527
+pythia-160m,npo,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,4.310037136077881,-0.19749140739440918,0.18516378568803182
+pythia-160m,npo,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,3.774571498235067,-0.057697455088297524,0.06021080104490906
+pythia-160m,npo,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,4.312556505203247,-0.040264288584391274,0.056134823295249554
+pythia-160m,npo,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.769454479217529,0.06292088826497395,0.034142607548136986
+pythia-160m,npo,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,3.4438347021738687,0.012359380722045898,0.017487336733095566
+pythia-160m,npo,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,8.053170998891195,-0.04684766133626302,0.029319035442382072
+pythia-160m,npo,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.518292506535848,-1.9073486328125e-06,0.01629775566532368
+pythia-160m,npo,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.1520406405131025,-0.02976385752360026,0.0030590016229288435
+pythia-160m,npo,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,2.846872170766195,-0.06937487920125325,0.0841859905656468
+pythia-160m,npo,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,2.508418401082357,-0.016771952311197918,0.016741990167679497
+pythia-160m,npo,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.424083073933919,-0.03073438008626302,0.05847426166173358
+pythia-160m,pcgu,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.14505248765150705,-0.0068177953362464905,0.011379045027048547
+pythia-160m,pcgu,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.03012470280130704,0.0026299053182204566,0.00389163887256384
+pythia-160m,pcgu,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.6348424355189006,-0.12661659717559814,0.07958448126580903
+pythia-160m,pcgu,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.35144292066494626,-0.020426223675409954,0.03525689516080498
+pythia-160m,pcgu,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,1.305987685918808,0.00592540701230367,0.12184001847976741
+pythia-160m,pcgu,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,1.066857119401296,-0.19598591327667236,0.05702411856466223
+pythia-160m,pcgu,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.6857382357120514,-0.0325981080532074,0.04741230646158682
+pythia-160m,pcgu,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,0.6321081022421519,0.043778071800867714,0.017605986021400972
+pythia-160m,pcgu,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,1.6680086453755696,0.014683961868286133,0.01355698378978431
+pythia-160m,pcgu,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,1.3537045915921528,0.011992196242014566,0.018853052627022627
+pythia-160m,pcgu,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,1.6905903021494548,0.06289891401926677,0.1013895531010399
+pythia-160m,pcgu,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,2.1067709922790527,-0.05041710535685221,0.02687084166505932
+pythia-160m,pcgu,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,5.506380558013916,0.20914936065673828,0.1897865019520639
+pythia-160m,pcgu,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,1.4697525103886921,-0.012365897496541342,0.012853446499423759
+pythia-160m,pcgu,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,6.089458624521892,0.25189781188964844,0.17058368613909172
+pythia-160m,pcgu,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,5.315560817718506,-0.015082200368245443,0.11537643341101966
+pythia-160m,pcgu,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,8.202320575714111,0.2464772860209147,0.3435917161566035
+pythia-160m,pcgu,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,4.6259385744730634,0.11841003100077312,0.06313445437277698
+pythia-160m,pcgu,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,3.7625648180643716,-0.06970413525899251,0.05381364770929632
+pythia-160m,pcgu,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,4.315571943918864,-0.037248849868774414,0.13674725053158676
+pythia-160m,pcgu,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.730101903279622,0.02356831232706706,0.0942319538857527
+pythia-160m,pcgu,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,3.4342278639475503,0.002752542495727539,0.02475721530661274
+pythia-160m,pcgu,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,8.104338804880777,0.0043201446533203125,0.11727618940039045
+pythia-160m,pcgu,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.524465481440226,0.006171067555745442,0.035856957595034204
+pythia-160m,pcgu,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.205543200174968,0.023738702138264973,0.09228427882703864
+pythia-160m,pcgu,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,2.894904534022013,-0.02134251594543457,0.01945272371659716
+pythia-160m,pcgu,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,2.5254741509755454,0.0002837975819905599,0.16034624896216595
+pythia-160m,pcgu,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.3126373291015625,-0.14218012491861978,0.06446202718228258
+mamba-130m-hf,continued_retain,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.1078249434940517,-0.0972445587006708,0.104891864541947
+mamba-130m-hf,continued_retain,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.500316699151881,-0.5421117148750151,0.7808675336210267
+mamba-130m-hf,continued_retain,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,0.5801818122466406,-1.038579449057579,0.7496710490389158
+mamba-130m-hf,continued_retain,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.22325539464751878,0.09118693446119626,0.2582319911811038
+mamba-130m-hf,continued_retain,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.058404227097829185,-0.8325891743103663,0.91256644909833
+mamba-130m-hf,continued_retain,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.10207605858643849,-0.37284739315509796,0.2556661768930251
+mamba-130m-hf,continued_retain,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.13347928908964,-0.24476174327234426,0.08584232908735033
+mamba-130m-hf,continued_retain,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,1.2578281859556835,-0.6853890120983124,0.8266591280929866
+mamba-130m-hf,continued_retain,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.3782998025417328,-0.4963300923506419,0.11651336230235983
+mamba-130m-hf,continued_retain,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,0.3226516842842102,-0.07068519790967305,0.2270607586990738
+mamba-130m-hf,continued_retain,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.12334586431582768,-0.1536875789364179,0.1371925378436466
+mamba-130m-hf,continued_retain,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,1.834599256515503,-1.2384045918782551,0.6336514430129625
+mamba-130m-hf,continued_retain,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,5.916384696960449,-0.8793239593505859,0.7519295800341007
+mamba-130m-hf,continued_retain,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,3.323129733403524,-0.5740992228190104,0.7821914723438503
+mamba-130m-hf,continued_retain,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,10.612868944803873,-1.3467038472493489,1.210546934076989
+mamba-130m-hf,continued_retain,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,6.298971017201741,-0.6668062210083008,0.2605863993179935
+mamba-130m-hf,continued_retain,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,10.916601181030273,-0.4031515121459961,0.13118829921355504
+mamba-130m-hf,continued_retain,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,10.371329307556152,-0.06913503011067708,1.0586444599978084
+mamba-130m-hf,continued_retain,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,2.144946813583374,0.19360069433848062,0.0781861978432971
+mamba-130m-hf,continued_retain,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,5.730282783508301,0.11618661880493164,0.3167519140723944
+mamba-130m-hf,continued_retain,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.431596120198567,-0.0872507095336914,0.12389849810727725
+mamba-130m-hf,continued_retain,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,2.154838959376017,-0.035199880599975586,0.06404547491671819
+mamba-130m-hf,continued_retain,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,7.177347342173259,-0.20743910471598306,0.060780502179177624
+mamba-130m-hf,continued_retain,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,2.8170341650644937,-0.12374107042948405,0.1874018337900739
+mamba-130m-hf,continued_retain,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.739871660868327,-0.10009495417277019,0.07272216078571243
+mamba-130m-hf,continued_retain,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,1.374747395515442,-0.04904178778330485,0.05273370695955901
+mamba-130m-hf,continued_retain,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.6052669684092202,-0.028740803400675457,0.12813707532701937
+mamba-130m-hf,continued_retain,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,6.658703327178955,-0.4583299954732259,0.2429009280311043
+mamba-130m-hf,sham,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.2049089123805364,-0.0001605898141860962,0.00019421694528259538
+mamba-130m-hf,sham,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,1.0423575441042583,-7.086992263793945e-05,0.00020356991530867978
+mamba-130m-hf,sham,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.6185183922449748,-0.00024286905924479166,0.0005468738252295513
+mamba-130m-hf,sham,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.13200742503007254,-6.103515625e-05,0.00012702648467722018
+mamba-130m-hf,sham,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.8912789871295294,0.0002855857213338216,0.000473985329710869
+mamba-130m-hf,sham,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.47534045577049255,0.0004170040289560954,0.0004288805943753873
+mamba-130m-hf,sham,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.37789318958918255,-0.0003478427728017171,0.0003357404068297521
+mamba-130m-hf,sham,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,1.943003495534261,-0.00021370251973470053,0.0005493719766644665
+mamba-130m-hf,sham,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.8745218912760416,-0.00010800361633300781,0.0004649130923519924
+mamba-130m-hf,sham,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,0.39333969354629517,2.8113524119059243e-06,0.00017700046705041635
+mamba-130m-hf,sham,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.2769737516840299,-5.969156821568807e-05,6.878259886692245e-05
+mamba-130m-hf,sham,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,3.074470043182373,0.001466194788614909,0.0010400104096092212
+mamba-130m-hf,sham,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,6.79625924428304,0.0005505879720052084,0.001244704314272285
+mamba-130m-hf,sham,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,3.897146145502726,-8.28107198079427e-05,0.0003662451878730324
+mamba-130m-hf,sham,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,11.959590911865234,1.811981201171875e-05,0.001135725213861486
+mamba-130m-hf,sham,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,6.964736779530843,-0.0010404586791992188,0.0007443285995095793
+mamba-130m-hf,sham,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,11.319375038146973,-0.000377655029296875,0.001011244245617912
+mamba-130m-hf,sham,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,10.440511067708334,4.673004150390625e-05,0.0002497971426963028
+mamba-130m-hf,sham,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,1.9510858456293743,-0.00026027361551920575,0.00015644166826933074
+mamba-130m-hf,sham,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,5.613788604736328,-0.0003075599670410156,0.0005207168749174881
+mamba-130m-hf,sham,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.519113858540853,0.00026702880859375,0.001197112292679389
+mamba-130m-hf,sham,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,2.189826488494873,-0.00021235148111979166,0.00022912525769611914
+mamba-130m-hf,sham,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,7.384334723154704,-0.00045172373453776043,0.0008053826655116232
+mamba-130m-hf,sham,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,2.940846602121989,7.13666280110677e-05,0.0002318667363936564
+mamba-130m-hf,sham,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.840720812479655,0.0007541974385579427,0.0008453049718965152
+mamba-130m-hf,sham,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,1.4239260355631511,0.00013685226440429688,0.00024139221794637253
+mamba-130m-hf,sham,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.634010155995687,2.384185791015625e-06,0.0005619580531997865
+mamba-130m-hf,sham,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.116794904073079,-0.0002384185791015625,0.00047745950140665313
+mamba-130m-hf,counterfactual,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.2641618301471074,0.05909232795238495,0.1282369369380834
+mamba-130m-hf,counterfactual,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.5320348714788755,-0.5103935425480207,0.7043975037112783
+mamba-130m-hf,counterfactual,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,0.6069795489311218,-1.0117817123730977,0.406283338546239
+mamba-130m-hf,counterfactual,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.14951083064079285,0.017442370454470318,0.09275660598553384
+mamba-130m-hf,counterfactual,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,0.7352588760356108,-0.15573452537258467,1.6453443222853443
+mamba-130m-hf,counterfactual,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.28648997843265533,-0.18843347330888113,0.07226236124246897
+mamba-130m-hf,counterfactual,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.3109833051760991,-0.06725772718588512,0.06026251025813112
+mamba-130m-hf,counterfactual,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,1.2172800501187642,-0.7259371479352316,0.6280017507426683
+mamba-130m-hf,counterfactual,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.5530979732672373,-0.32153192162513733,0.061551884825941316
+mamba-130m-hf,counterfactual,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,0.23651881019274393,-0.1568180720011393,0.06147672863206584
+mamba-130m-hf,counterfactual,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.7660739024480184,0.4890404591957728,0.3278297796374726
+mamba-130m-hf,counterfactual,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,2.669697125752767,-0.4033067226409912,0.17393792349120685
+mamba-130m-hf,counterfactual,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,4.618853410085042,-2.1768552462259927,0.41550738846041907
+mamba-130m-hf,counterfactual,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,3.2371522585550943,-0.6600766976674398,0.27185427285237335
+mamba-130m-hf,counterfactual,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,8.669527689615885,-3.2900451024373374,1.1368747773957981
+mamba-130m-hf,counterfactual,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,4.479928334554036,-2.485848903656006,0.5517830800636095
+mamba-130m-hf,counterfactual,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,9.220829963684082,-2.0989227294921875,1.244885001557271
+mamba-130m-hf,counterfactual,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,7.8402276039123535,-2.600236733754476,0.7141802193850374
+mamba-130m-hf,counterfactual,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,2.011022965113322,0.05967684586842855,0.18612044025575403
+mamba-130m-hf,counterfactual,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,4.987808704376221,-0.6262874603271484,0.4180349999364557
+mamba-130m-hf,counterfactual,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.2532273928324384,-0.265619436899821,0.07054462398131153
+mamba-130m-hf,counterfactual,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,2.254976511001587,0.06493767102559407,0.022564332019082287
+mamba-130m-hf,counterfactual,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,7.300711790720622,-0.0840746561686198,0.1508681523328159
+mamba-130m-hf,counterfactual,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,3.0320468743642173,0.09127163887023926,0.06499526842705125
+mamba-130m-hf,counterfactual,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.268582820892334,-0.5713837941487631,0.10523007305239997
+mamba-130m-hf,counterfactual,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,1.3208386103312175,-0.1029505729675293,0.10656831488169734
+mamba-130m-hf,counterfactual,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.7794743378957114,0.14546656608581543,0.007123905144897049
+mamba-130m-hf,counterfactual,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.425856749216716,0.3088234265645345,0.16374625854577135
+mamba-130m-hf,gradient_ascent,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.18683584531148276,-0.018233656883239746,0.05063977661643179
+mamba-130m-hf,gradient_ascent,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,0.9787327150503794,-0.06369569897651672,0.13406587414414137
+mamba-130m-hf,gradient_ascent,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.6457665363947551,0.02700527509053548,0.05785800632847073
+mamba-130m-hf,gradient_ascent,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.1266926775376002,-0.005375782648722331,0.008103365277615814
+mamba-130m-hf,gradient_ascent,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,1.061076859633128,0.17008345822493234,0.3159282436998971
+mamba-130m-hf,gradient_ascent,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.4508933623631795,-0.024030089378356934,0.03479874051945082
+mamba-130m-hf,gradient_ascent,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.3160063872734706,-0.062234645088513695,0.06517989838299172
+mamba-130m-hf,gradient_ascent,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,1.8700159788131714,-0.07320121924082439,0.06992467834573032
+mamba-130m-hf,gradient_ascent,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.8303438425064087,-0.04428605238596598,0.009496069178301574
+mamba-130m-hf,gradient_ascent,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,0.34661878148714703,-0.046718100706736244,0.018672345930337616
+mamba-130m-hf,gradient_ascent,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.2656421388188998,-0.011391304433345795,0.013465580070599129
+mamba-130m-hf,gradient_ascent,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,3.0244503021240234,-0.0485535462697347,0.10334447493945306
+mamba-130m-hf,gradient_ascent,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,6.7051207224528,-0.09058793385823567,0.1305885922891346
+mamba-130m-hf,gradient_ascent,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,3.834400177001953,-0.06282877922058105,0.09676172059240014
+mamba-130m-hf,gradient_ascent,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,11.944263140360514,-0.015309651692708334,0.11471686611732969
+mamba-130m-hf,gradient_ascent,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,6.897466977437337,-0.06831026077270508,0.010330429157811016
+mamba-130m-hf,gradient_ascent,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,11.295584360758463,-0.02416833241780599,0.1020856589810846
+mamba-130m-hf,gradient_ascent,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,10.407319704691568,-0.033144632975260414,0.06991357688374747
+mamba-130m-hf,gradient_ascent,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,1.936273177464803,-0.015072941780090332,0.006954114349318254
+mamba-130m-hf,gradient_ascent,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,5.603185176849365,-0.010910987854003906,0.019794932419792514
+mamba-130m-hf,gradient_ascent,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.534324963887532,0.015478134155273438,0.012761934118900429
+mamba-130m-hf,gradient_ascent,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,2.1897688706715903,-0.00026996930440266925,0.0018883808715279002
+mamba-130m-hf,gradient_ascent,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,7.408407052357991,0.02362060546875,0.024791325583700282
+mamba-130m-hf,gradient_ascent,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,2.9362241427103677,-0.004551092783610026,0.008016767063193505
+mamba-130m-hf,gradient_ascent,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.842480500539144,0.002513885498046875,0.006420207391541483
+mamba-130m-hf,gradient_ascent,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,1.4306735595067341,0.006884376207987468,0.004700696427606408
+mamba-130m-hf,gradient_ascent,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.649346351623535,0.015338579813639322,0.021833749487405327
+mamba-130m-hf,gradient_ascent,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.137868245442708,0.020834922790527344,0.029137418475717453
+mamba-130m-hf,npo,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.1902007833123207,-0.014868718882401785,0.04740070158867547
+mamba-130m-hf,npo,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,1.0114768743515015,-0.030951539675394695,0.12017186085750863
+mamba-130m-hf,npo,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.6877407630284627,0.06897950172424316,0.060545721641767164
+mamba-130m-hf,npo,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.13524213184913,0.0031736716628074646,0.011927045263601988
+mamba-130m-hf,npo,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,1.0936566591262817,0.20266325771808624,0.3324396980532459
+mamba-130m-hf,npo,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.46382901072502136,-0.011094441016515097,0.030665717805358008
+mamba-130m-hf,npo,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.3175191879272461,-0.06072184443473816,0.061145094436004195
+mamba-130m-hf,npo,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,1.8827446301778157,-0.060472567876180015,0.05728511153997156
+mamba-130m-hf,npo,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.8465602199236552,-0.028069674968719482,0.012875862608987994
+mamba-130m-hf,npo,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,0.36106934150060016,-0.03226754069328308,0.017074439710124248
+mamba-130m-hf,npo,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.2688269664843877,-0.00820647676785787,0.009340009048561602
+mamba-130m-hf,npo,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,3.034762700398763,-0.03824114799499512,0.08973285266967038
+mamba-130m-hf,npo,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,6.708105246225993,-0.08760341008504231,0.12316863307567334
+mamba-130m-hf,npo,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,3.8394100666046143,-0.05781888961791992,0.09199108059210233
+mamba-130m-hf,npo,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,11.940289179484049,-0.019283612569173176,0.06892132333367873
+mamba-130m-hf,npo,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,6.914996306101481,-0.050780932108561196,0.012456626772528753
+mamba-130m-hf,npo,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,11.300702095031738,-0.01905059814453125,0.09406998283563173
+mamba-130m-hf,npo,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,10.402364730834961,-0.03809960683186849,0.06048364399774836
+mamba-130m-hf,npo,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,1.944205363591512,-0.007140755653381348,0.006143783678933539
+mamba-130m-hf,npo,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,5.605829238891602,-0.008266925811767578,0.02037544887031373
+mamba-130m-hf,npo,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.538758595784505,0.019911766052246094,0.015725259841412625
+mamba-130m-hf,npo,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,2.191328207651774,0.00128936767578125,0.0032684366743078617
+mamba-130m-hf,npo,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,7.413559754689534,0.02877330780029297,0.02676404427659539
+mamba-130m-hf,npo,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,2.9391257762908936,-0.0016494592030843098,0.0049171208822242265
+mamba-130m-hf,npo,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.842543919881185,0.0025773048400878906,0.006612314627375815
+mamba-130m-hf,npo,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,1.4318455060323079,0.008056322733561197,0.004319463209167208
+mamba-130m-hf,npo,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.655273755391439,0.02126598358154297,0.027066521511182728
+mamba-130m-hf,npo,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.142109394073486,0.02507607142130534,0.030192126462580213
+mamba-130m-hf,pcgu,retain,test-t0-retain-alder,association-alder,Consult the registry entry for alder; the code shown is,cobalt,0.2199715475241343,0.014902045329411825,0.00576283619552049
+mamba-130m-hf,pcgu,retain,test-t0-retain-birch,association-birch,Consult the registry entry for birch; the code shown is,topaz,1.1035340229670207,0.06110560894012451,0.013466827237799442
+mamba-130m-hf,pcgu,retain,test-t0-retain-cedar,association-cedar,Consult the registry entry for cedar; the code shown is,marble,1.627565900484721,0.008804639180501303,0.020941800832093564
+mamba-130m-hf,pcgu,retain,test-t0-retain-dogwood,association-dogwood,Consult the registry entry for dogwood; the code shown is,violet,0.13848978281021118,0.006421322623888652,0.0018341257407414784
+mamba-130m-hf,pcgu,retain,test-t0-retain-elm,association-elm,Consult the registry entry for elm; the code shown is,quartz,1.07104687889417,0.18005347748597464,0.14710229499687613
+mamba-130m-hf,pcgu,retain,test-t0-retain-fir,association-fir,Consult the registry entry for fir; the code shown is,coral,0.5237185855706533,0.04879513382911682,0.03942550410791154
+mamba-130m-hf,pcgu,retain,test-t1-retain-alder,association-alder,Which code is assigned to alder? Answer:,cobalt,0.3946601251761119,0.016419092814127605,0.006480386326431091
+mamba-130m-hf,pcgu,retain,test-t1-retain-birch,association-birch,Which code is assigned to birch? Answer:,topaz,1.8756014506022136,-0.06761574745178223,0.1065618832782675
+mamba-130m-hf,pcgu,retain,test-t1-retain-cedar,association-cedar,Which code is assigned to cedar? Answer:,marble,0.8917266925175985,0.017096797625223797,0.02377046334315315
+mamba-130m-hf,pcgu,retain,test-t1-retain-dogwood,association-dogwood,Which code is assigned to dogwood? Answer:,violet,0.4043932755788167,0.011056393384933472,0.014832993119121245
+mamba-130m-hf,pcgu,retain,test-t1-retain-elm,association-elm,Which code is assigned to elm? Answer:,quartz,0.2887813126047452,0.011747869352499643,0.007611978262186965
+mamba-130m-hf,pcgu,retain,test-t1-retain-fir,association-fir,Which code is assigned to fir? Answer:,coral,3.1124192078908286,0.03941535949707031,0.05395365616158586
+mamba-130m-hf,pcgu,retain,test-t2-retain-alder,association-alder,"For alder, the registry lists the identifier",cobalt,6.764159679412842,-0.03154897689819336,0.07349599419526424
+mamba-130m-hf,pcgu,retain,test-t2-retain-birch,association-birch,"For birch, the registry lists the identifier",topaz,3.894857168197632,-0.0023717880249023438,0.015313990232781538
+mamba-130m-hf,pcgu,retain,test-t2-retain-cedar,association-cedar,"For cedar, the registry lists the identifier",marble,11.88404401143392,-0.07552878061930339,0.008736196095947514
+mamba-130m-hf,pcgu,retain,test-t2-retain-dogwood,association-dogwood,"For dogwood, the registry lists the identifier",violet,6.982583204905192,0.01680596669514974,0.007459359594305301
+mamba-130m-hf,pcgu,retain,test-t2-retain-elm,association-elm,"For elm, the registry lists the identifier",quartz,11.271139780680338,-0.04861291249593099,0.09640109273601093
+mamba-130m-hf,pcgu,retain,test-t2-retain-fir,association-fir,"For fir, the registry lists the identifier",coral,10.40606657663981,-0.03439776102701823,0.060793759084802466
+mamba-130m-hf,pcgu,utility,test-utility-00,confirmatory-utility-0,Fresh grass is usually,green,1.9548235336939495,0.0034774144490559897,0.04094235661004984
+mamba-130m-hf,pcgu,utility,test-utility-01,confirmatory-utility-1,Newly fallen snow is,white,5.492707411448161,-0.12138875325520833,0.13312740538973947
+mamba-130m-hf,pcgu,utility,test-utility-02,confirmatory-utility-2,Fire is commonly described as,hot,5.540369987487793,0.021523157755533855,0.028615094344797476
+mamba-130m-hf,pcgu,utility,test-utility-03,confirmatory-utility-3,Three plus three equals,six,2.1829582850138345,-0.007080554962158203,0.004379561310680813
+mamba-130m-hf,pcgu,utility,test-utility-04,confirmatory-utility-4,A dozen contains,twelve,7.356876214345296,-0.027910232543945312,0.0875033584426921
+mamba-130m-hf,pcgu,utility,test-utility-05,confirmatory-utility-5,A triangle has,three,2.9110685189565024,-0.029706716537475586,0.02861354276525664
+mamba-130m-hf,pcgu,utility,test-utility-06,confirmatory-utility-6,A cat commonly says,meow,5.834399382273356,-0.005567232767740886,0.0844236254061221
+mamba-130m-hf,pcgu,utility,test-utility-07,confirmatory-utility-7,The sun rises in the,east,1.4965049028396606,0.0727157195409139,0.016976010591520485
+mamba-130m-hf,pcgu,utility,test-utility-08,confirmatory-utility-8,Frozen water is called,ice,3.6640261014302573,0.030018329620361328,0.018699435328296782
+mamba-130m-hf,pcgu,utility,test-utility-09,confirmatory-utility-9,The period between sunrise and sunset is,daytime,7.248937924702962,0.13190460205078125,0.11121862388461913
