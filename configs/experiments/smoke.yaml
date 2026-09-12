@@ -1,0 +1,21 @@
+name: controlled-smoke-v1
+track: controlled_unlearning
+model: tiny_fixture
+dataset: controlled_v1
+methods:
+  - untouched
+  - trained_full
+  - exact_retrain
+  - continued_retain
+  - sham
+  - counterfactual
+  - gradient_ascent
+  - npo
+  - pcgu
+seeds: [11]
+training:
+  steps: 50
+  learning_rate: 0.2
+primary_endpoints:
+  forgetting: forget_oracle_kl
+  utility: utility_nll

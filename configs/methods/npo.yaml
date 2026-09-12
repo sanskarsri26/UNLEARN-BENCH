@@ -1,0 +1,6 @@
+name: npo
+steps: 12
+learning_rate: 0.05
+beta: 0.1
+retain_weight: 1.0
+reference: trained_full

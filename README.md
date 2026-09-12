@@ -1,61 +1,117 @@
-UNLEARN-BENCH: A Unified Benchmark for Machine Unlearning in SLMs and SSMs
+# UNLEARN-BENCH
 
+A reproducible benchmark for measuring whether approximate parameter interventions remove known
+learned associations while preserving retained knowledge and language-model utility.
 
-Please see the branches of the repo for the respective code. 
+## Research Question
 
-Overview
-This repository implements machine unlearning for debiasing a Mamba 0.13B (LoRA) language model using the Partitioned Contrastive Gradient Unlearning (PCGU) algorithm. Bias is measured using the StereoSet benchmark and qualitative prompt completion.
+Under matched compute budgets, which approximate parameter-editing or unlearning methods most
+effectively remove known learned associations while preserving retained knowledge and general
+language-model utility?
 
-Workflow
-1. Data Preparation
-Place wg.tsv (WinoGender) and stereoset_dev.json (StereoSet) in the data/ directory.
-Run preprocessing to generate grouped contrastive data:
-python scripts/preprocess_winogender.py
-2. Fine-tuning
-Fine-tune Mamba-130M (LoRA) on WinoGender:
-python scripts/finetune_winogender.py
-Output: models/finetuned_lora/
-3. PCGU Unlearning
-Apply Partitioned Contrastive Gradient Unlearning:
-python scripts/pcgu_unlearn.py
-Output: models/debiased_lora/
-4. Evaluation
-StereoSet Bias Score:
-python scripts/evaluate_stereoset.py
-Qualitative Prompt Comparisons:
-python scripts/compare_bias_prompts.py
-Results
-Model Type	StereoSet Bias Score (%)	Notes
-Fine-tuned mamba 0.13B (LoRA)	46.82	Before unlearning
-PCGU Unlearned	46.73	Best debiasing, utility maintained better
-PCGU (aggressive)	46.49	Hallucinations observed
-Parameters
-Fine-tuning:
+A secondary, exploratory question compares forgetting–utility–compute trade-offs across transformer
+and state-space families. Those model families are not sufficiently matched for causal architecture
+claims.
 
-Epochs: 3
-Batch size: 8
-Learning rate: 5e-5
-PCGU Unlearning:
+## Experimental Design
 
-projection_steps: 30
-learning_rate: 2e-5
-lambda_reg: 0.15
-Dependencies
-torch
-transformers
-peft
-pandas
-tqdm
-Note:
-This project is tested on an NVIDIA A100 GPU. Make sure you have CUDA drivers and compatible PyTorch installed.
-If running on CPU, set device mapping and tensor types accordingly in the scripts.
+The research reboot is separate from the preserved historical implementation. Track A performs
+controlled machine unlearning with a known forget set. Track B, when enabled, measures external bias
+generalization and uses the term **unlearning-inspired debiasing** for inherited pretrained bias.
 
-GPU Setup:
-If using A100 and CUDA 11.8/12.x, ensure your PyTorch install matches your CUDA driver by running:
+Main experiments are configuration-gated until GPU smoke calibration is reviewed. Smoke results are
+exploratory; no historical headline result is reused as evidence.
 
-pip install torch --index-url https://download.pytorch.org/whl/cu121
-Adjust the version (cu121 for CUDA 12.1) according to your CUDA version.
+## Controlled Unlearning Setup
 
-Install all dependencies with:
+The primary pipeline is:
 
-pip install -r requirements.txt
+```text
+base model
+  -> train on retain + forget examples
+  -> apply an intervention
+  -> compare with an exact-retrain model trained from the same base on retain only
+```
+
+Versioned JSONL manifests declare every train/validation/test example, retain/forget/utility
+partition, source, category, group, ID, and SHA-256 content hash. Different held-out phrasings test
+association generalization without exact-example leakage.
+
+## Methods
+
+The frozen matrix includes the untouched base, retain+forget trained model, exact retraining,
+continued retain fine-tuning, a seeded random-update sham, counterfactual fine-tuning, gradient
+ascent, NPO, and PCGU. PCGU implements contrastive gradients, vector partitioning, cosine ranking,
+selection masks, and masked updates. Its causal-LM adaptation and differences from the original
+masked-LM method are documented in [PCGU verification](docs/pcgu_verification.md).
+
+## Models
+
+The local `tiny-association-fixture` makes the complete pipeline and CI CPU-runnable. It is not a
+scientific model. Revision-pinned base-model configurations are supplied for Pythia-160M,
+Mamba-130M, Pythia-410M, and Mamba-370M. The current runner intentionally gates these GPU tiers
+until the checkpoint-efficient Hugging Face adapter and compute calibration are reviewed.
+
+## Evaluation
+
+The predeclared primary forgetting endpoint is forget-set categorical KL divergence to the
+exact-retrain oracle. The primary utility endpoint is held-out utility negative log likelihood.
+Secondary outputs include forget/retain loss, target probability and log-probability margin,
+accuracy, perplexity, runtime, VRAM, checkpoint size, and trainable parameter count.
+
+StereoSet support reports LMS, SS, and ICAT, with SS interpreted as neutral near 50 rather than
+“lower is better.” All causal-LM candidates must be scored conditionally on continuation tokens.
+
+## Results
+
+The nine-method CPU fixture smoke pipeline passes end to end. It generated raw predictions,
+machine-readable manifests, regenerated metrics, an aggregate table, and a forgetting–utility plot.
+These are engineering validation artifacts, classified **EXPLORATORY**, and support no substantive
+model-unlearning claim. No confirmatory main result exists yet.
+
+## Reproducibility
+
+```bash
+pip install -e '.[dev,figures]'
+python scripts/prepare_data.py
+python scripts/run_experiment.py --config configs/experiments/smoke.yaml
+python scripts/evaluate.py --run RUN_ID
+python scripts/aggregate_results.py
+python scripts/make_figures.py
+```
+
+Each run retains per-example outputs, summary metrics, the final checkpoint, and a JSON manifest with
+the git commit, exact configuration, revisions, seeds, hashes, software, hardware, runtime, and
+artifact paths. See [reproducibility](docs/reproducibility.md) and
+[methodology](docs/methodology.md).
+
+## Repository Structure
+
+```text
+configs/                 versioned dataset, model, method, and experiment settings
+data/controlled/v1/      deterministic Track A manifests
+docs/                    methodology, audit, reproducibility, limitations, PCGU verification
+reports/                 compute budget plus generated figures and tables
+results/                 run manifests, raw predictions, checkpoints, and metrics
+scripts/                 prepare, run, evaluate, aggregate, figure, and validation entry points
+src/unlearn_bench/       data, models, methods, evaluation, statistics, and utilities
+tests/                   lightweight behavioral and reproducibility tests
+Unlearning/              preserved HISTORICAL / UNVERIFIED implementation and artifacts
+```
+
+`Final_Report.pdf` and everything under `Unlearning/` are retained for provenance. The historical
+46.82, 46.73, and 46.49 scores and their associated claims are **HISTORICAL / UNVERIFIED** and must
+not be cited as reboot results. See the [legacy audit](docs/legacy_audit.md).
+
+## Limitations
+
+The completed smoke uses a synthetic fixture, real-model training is not yet executable, Track B has
+no versioned external dataset artifact, and cross-family comparisons will be observational. Exact
+scope and deferred evaluations are listed in [limitations](docs/limitations.md).
+
+## Future Work
+
+Implement and test the checkpoint-efficient Hugging Face causal-LM adapter; calibrate Pythia-160M
+and Mamba-130M on the target GPU; review and freeze the resulting compute budget; run the three-seed
+main matrix; then add focused ablations, paired uncertainty, category-level error analysis, and
+licensed Track B benchmarks.

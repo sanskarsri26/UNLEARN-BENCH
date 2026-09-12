@@ -1,0 +1,22 @@
+name: controlled-main-mamba-v1
+track: controlled_unlearning
+model: mamba_370m
+dataset: controlled_v1
+methods:
+  - untouched
+  - trained_full
+  - exact_retrain
+  - continued_retain
+  - sham
+  - counterfactual
+  - gradient_ascent
+  - npo
+  - pcgu
+seeds: [11, 29, 47]
+requires_calibration_approval: true
+training:
+  steps: 500
+  learning_rate: 0.00001
+primary_endpoints:
+  forgetting: forget_oracle_kl
+  utility: utility_nll

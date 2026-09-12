@@ -1,0 +1,7 @@
+name: pythia-410m
+family: transformer
+backend: huggingface_causal_lm
+repository: EleutherAI/pythia-410m
+revision: 9879c9b
+tokenizer_revision: 9879c9b
+model_class: AutoModelForCausalLM

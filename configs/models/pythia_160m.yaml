@@ -1,0 +1,7 @@
+name: pythia-160m
+family: transformer
+backend: huggingface_causal_lm
+repository: EleutherAI/pythia-160m
+revision: 50f5173
+tokenizer_revision: 50f5173
+model_class: AutoModelForCausalLM

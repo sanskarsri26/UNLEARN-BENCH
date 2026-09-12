@@ -1,0 +1,35 @@
+{
+  "dataset": "controlled-associations-v1",
+  "files": {
+    "test": {
+      "count": 12,
+      "partitions": {
+        "forget": 4,
+        "retain": 6,
+        "utility": 2
+      },
+      "path": "/scratch/ssriva94/UNLEARN-BENCH/data/controlled/v1/test.jsonl",
+      "sha256": "d454b59a2666941a050ac16b28dff64ba75356281ce21538df2c7b545e178ab4"
+    },
+    "train": {
+      "count": 12,
+      "partitions": {
+        "forget": 4,
+        "retain": 6,
+        "utility": 2
+      },
+      "path": "/scratch/ssriva94/UNLEARN-BENCH/data/controlled/v1/train.jsonl",
+      "sha256": "6f393e27c4f07702825b7071908a5e33e527bd546fa840800a64713d93cc13d4"
+    },
+    "validation": {
+      "count": 12,
+      "partitions": {
+        "forget": 4,
+        "retain": 6,
+        "utility": 2
+      },
+      "path": "/scratch/ssriva94/UNLEARN-BENCH/data/controlled/v1/validation.jsonl",
+      "sha256": "1af1e9f85b1646b4572ce1246a87dd910f471b3a762ddff8cc97c937aa1dfee8"
+    }
+  }
+}
