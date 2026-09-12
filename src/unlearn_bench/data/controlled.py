@@ -98,7 +98,7 @@ def build_controlled_dataset(output_dir: str | Path) -> dict[str, Any]:
         path = output_dir / f"{split}.jsonl"
         write_jsonl(path, rows)
         summary["files"][split] = {
-            "path": str(path),
+            "path": path.name,
             "sha256": sha256_file(path),
             "count": len(rows),
             "partitions": dict(sorted(Counter(row["partition"] for row in rows).items())),

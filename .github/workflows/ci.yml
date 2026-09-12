@@ -20,3 +20,4 @@ jobs:
       - run: pytest
       - name: CPU fixture smoke
         run: python scripts/run_experiment.py --config configs/experiments/smoke.yaml
+      - run: python scripts/validate_results.py

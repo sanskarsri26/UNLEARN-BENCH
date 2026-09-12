@@ -19,6 +19,7 @@ class ControlledDataTests(unittest.TestCase):
             for split in ("train", "validation", "test"):
                 self.assertEqual(left["files"][split]["sha256"], right["files"][split]["sha256"])
                 self.assertEqual(left["files"][split]["sha256"], self.EXPECTED_HASHES[split])
+                self.assertEqual(left["files"][split]["path"], f"{split}.jsonl")
                 self.assertEqual(left["files"][split]["count"], 12)
                 self.assertEqual(
                     left["files"][split]["partitions"], {"forget": 4, "retain": 6, "utility": 2}

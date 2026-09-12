@@ -13,6 +13,7 @@ import torch
 from unlearn_bench.config import resolve_experiment
 from unlearn_bench.data import load_records, validate_manifests
 from unlearn_bench.evaluation import evaluate_model, metrics_from_predictions
+from unlearn_bench.manifest import validate_run_manifest
 from unlearn_bench.methods import apply_method, supervised_train
 from unlearn_bench.methods.common import clone_model, trainable_parameter_count
 from unlearn_bench.models import TinyAssociationLM, build_vocabulary
@@ -193,6 +194,7 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
                 "metrics_path": str(metrics_path.relative_to(root)),
                 "method_metadata": method_metadata,
             }
+            validate_run_manifest(manifest, root)
             atomic_json(run_dir / "manifest.json", manifest)
             run_ids.append(run_id)
     return run_ids
