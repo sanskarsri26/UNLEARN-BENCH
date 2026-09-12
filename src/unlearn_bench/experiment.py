@@ -60,6 +60,7 @@ def _run_id(experiment: str, method: str, seed: int, timestamp: str) -> str:
 def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]:
     root = Path(root).resolve()
     config = resolve_experiment(config_path)
+    config["config_path"] = str(Path(config_path).resolve().relative_to(root))
     if config.get("requires_calibration_approval", False):
         marker = root / "results" / "manifests" / "CALIBRATION_REVIEWED"
         if not marker.exists():
@@ -81,6 +82,8 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
             "The v0.1 executable runner supports the calibrated tiny backend. Revision-pinned HF "
             "models are declared for the GPU implementation milestone; see docs/limitations.md."
         )
+    invocation_timestamp = datetime.now(timezone.utc).isoformat()
+    run_set_id = f"{config['name']}-{sha256_value(invocation_timestamp)[:8]}"
     run_ids = []
     for seed in config["seeds"]:
         set_seed(seed)
@@ -88,6 +91,7 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
         full = clone_model(base)
         exact = clone_model(base)
         train_cfg = config["training"]
+        full_started = time.perf_counter()
         supervised_train(
             full,
             vocabulary,
@@ -95,7 +99,9 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
             steps=train_cfg["steps"],
             learning_rate=train_cfg["learning_rate"],
         )
+        full_training_runtime = time.perf_counter() - full_started
         retain_train = [row for row in records["train"] if row["partition"] != "forget"]
+        exact_started = time.perf_counter()
         supervised_train(
             exact,
             vocabulary,
@@ -103,6 +109,7 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
             steps=train_cfg["steps"],
             learning_rate=train_cfg["learning_rate"],
         )
+        exact_training_runtime = time.perf_counter() - exact_started
         for method in config["methods"]:
             if torch.cuda.is_available():
                 torch.cuda.reset_peak_memory_stats()
@@ -119,7 +126,12 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
             )
             predictions = evaluate_model(model, exact, vocabulary, records["test"])
             metrics = metrics_from_predictions(predictions)
-            runtime = time.perf_counter() - started
+            intervention_runtime = time.perf_counter() - started
+            setup_runtime = {
+                "trained_full": full_training_runtime,
+                "exact_retrain": exact_training_runtime,
+            }.get(method, 0.0)
+            runtime = intervention_runtime + setup_runtime
             timestamp = datetime.now(timezone.utc).isoformat()
             run_id = _run_id(config["name"], method, seed, timestamp)
             run_dir = root / "results" / "runs" / run_id
@@ -140,6 +152,8 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
             manifest = {
                 "schema_version": 1,
                 "run_id": run_id,
+                "run_set_id": run_set_id,
+                "experiment_name": config["name"],
                 "timestamp_utc": timestamp,
                 "git_commit": git_commit(root),
                 "track": config["track"],
@@ -167,6 +181,8 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
                 "hardware": _hardware(),
                 "versions": _versions(),
                 "runtime_seconds": runtime,
+                "intervention_runtime_seconds": intervention_runtime,
+                "attributed_setup_runtime_seconds": setup_runtime,
                 "peak_vram_bytes": (
                     torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0
                 ),

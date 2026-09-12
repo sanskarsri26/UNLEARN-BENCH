@@ -16,17 +16,30 @@ def aggregate(results_dir: Path) -> list[dict]:
     for manifest_path in sorted(results_dir.glob("*/manifest.json")):
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         metrics = json.loads((manifest_path.parent / "metrics.json").read_text(encoding="utf-8"))
-        groups[(manifest["model_name"], manifest["method"])].append((manifest, metrics))
+        key = (
+            manifest.get("run_set_id", "legacy-run-set"),
+            manifest.get("experiment_name", "unknown"),
+            manifest["git_commit"],
+            manifest["model_name"],
+            manifest["method"],
+        )
+        groups[key].append((manifest, metrics))
     rows = []
-    for (model, method), values in sorted(groups.items()):
+    for (run_set, experiment, commit, model, method), values in sorted(groups.items()):
+        seeds = [item[0]["random_seed"] for item in values]
+        if len(seeds) != len(set(seeds)):
+            raise ValueError(f"Duplicate seeds in run set {run_set}, method {method}: {seeds}")
         forget = [item[1]["forget_oracle_kl"] for item in values]
         utility = [item[1]["utility_nll"] for item in values]
         runtime = [item[0]["runtime_seconds"] for item in values]
         rows.append(
             {
+                "run_set": run_set,
+                "experiment": experiment,
+                "git_commit": commit,
                 "model": model,
                 "method": method,
-                "seeds": len(values),
+                "seeds": len(seeds),
                 "forget_oracle_kl_mean": mean(forget),
                 "forget_oracle_kl_sd": stdev(forget) if len(forget) > 1 else 0.0,
                 "utility_nll_mean": mean(utility),
