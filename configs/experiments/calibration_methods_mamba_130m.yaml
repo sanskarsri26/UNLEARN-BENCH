@@ -1,0 +1,34 @@
+name: controlled-method-calibration-mamba-130m-v2
+track: controlled_unlearning
+model: mamba_130m
+dataset: controlled_v1
+device: cuda
+precision: fp32
+allow_mps_fallback: false
+deterministic: true
+checkpoint_policy: metadata_only
+methods:
+  - untouched
+  - trained_full
+  - exact_retrain
+  - continued_retain
+  - sham
+  - counterfactual
+  - gradient_ascent
+  - npo
+  - pcgu
+seeds: [11]
+training:
+  steps: 20
+  exact_steps: 20
+  batch_size: 4
+  learning_rate: 0.00005
+method_overrides:
+  continued_retain: {steps: 12, batch_size: 4, learning_rate: 0.00005}
+  counterfactual: {steps: 12, batch_size: 4, learning_rate: 0.00005}
+  gradient_ascent: {steps: 4, learning_rate: 0.000005, retain_weight: 1.0}
+  npo: {steps: 4, learning_rate: 0.000005, beta: 0.1, retain_weight: 1.0}
+  pcgu: {steps: 6, learning_rate: 0.00005, selected_fraction: 0.1}
+primary_endpoints:
+  forgetting: forget_oracle_kl
+  utility: utility_nll
