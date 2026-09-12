@@ -1,0 +1,33 @@
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+The fast path is not available because one of `(selective_state_update, selective_scan_fn, causal_conv1d_fn, causal_conv1d_update, mamba_inner_fn)` is None. Falling back to the sequential implementation of Mamba, as use_mambapy is set to False. To install follow https://github.com/state-spaces/mamba/#installation and https://github.com/Dao-AILab/causal-conv1d. For the mamba.py backend, follow https://github.com/alxndrTL/mamba.py.
+Terminal run cells (completed or explicitly failed):
+controlled-main-mamba-130m-v2-untouched-s11-65adbd28
+controlled-main-mamba-130m-v2-trained_full-s11-c85441fd
+controlled-main-mamba-130m-v2-exact_retrain-s11-8c84b1af
+controlled-main-mamba-130m-v2-continued_retain-s11-db35754e
+controlled-main-mamba-130m-v2-sham-s11-886bf8e5
+controlled-main-mamba-130m-v2-counterfactual-s11-d2670673
+controlled-main-mamba-130m-v2-gradient_ascent-s11-539c3c6c
+controlled-main-mamba-130m-v2-npo-s11-0a20aa16
+controlled-main-mamba-130m-v2-pcgu-s11-b6fc3d22
+controlled-main-mamba-130m-v2-untouched-s29-db0ba001
+controlled-main-mamba-130m-v2-trained_full-s29-9b5636a6
+controlled-main-mamba-130m-v2-exact_retrain-s29-4ec06d54
+controlled-main-mamba-130m-v2-continued_retain-s29-09f3ab68
+controlled-main-mamba-130m-v2-sham-s29-70b7acdf
+controlled-main-mamba-130m-v2-counterfactual-s29-d3d291e2
+controlled-main-mamba-130m-v2-gradient_ascent-s29-7e4fb708
+controlled-main-mamba-130m-v2-npo-s29-4776710f
+controlled-main-mamba-130m-v2-pcgu-s29-c025596d
+controlled-main-mamba-130m-v2-untouched-s47-f2df84da
+controlled-main-mamba-130m-v2-trained_full-s47-297355fa
+controlled-main-mamba-130m-v2-exact_retrain-s47-b0c1d04f
+controlled-main-mamba-130m-v2-continued_retain-s47-cf16c202
+controlled-main-mamba-130m-v2-sham-s47-eaffaa69
+controlled-main-mamba-130m-v2-counterfactual-s47-bf9c9833
+controlled-main-mamba-130m-v2-gradient_ascent-s47-7a703b51
+controlled-main-mamba-130m-v2-npo-s47-4d59853f
+controlled-main-mamba-130m-v2-pcgu-s47-5e924725

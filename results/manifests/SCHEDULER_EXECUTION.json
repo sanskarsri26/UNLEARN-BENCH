@@ -1,0 +1,37 @@
+{
+  "confirmatory_jobs": [
+    {
+      "elapsed": "00:02:05",
+      "experiment": "controlled-main-pythia-160m-v2",
+      "job_id": "63044960",
+      "partition": "lightwork",
+      "requested_gpu": "a100.20gb:1",
+      "state": "COMPLETED"
+    },
+    {
+      "elapsed": "00:04:48",
+      "experiment": "controlled-main-mamba-130m-v2",
+      "job_id": "63044961",
+      "partition": "lightwork",
+      "requested_gpu": "a100.20gb:1",
+      "state": "COMPLETED"
+    }
+  ],
+  "preregistration_commit": "005db27a9f0b427bfa3fcc1cbcc3cc19da0c67a6",
+  "superseded_pending_jobs": [
+    {
+      "elapsed": "00:00:00",
+      "job_id": "63044644",
+      "partition": "htc",
+      "reason": "Moved before execution to an available A100 MIG pool; no compute consumed.",
+      "state": "CANCELLED"
+    },
+    {
+      "elapsed": "00:00:00",
+      "job_id": "63044645",
+      "partition": "htc",
+      "reason": "Moved before execution to an available A100 MIG pool; no compute consumed.",
+      "state": "CANCELLED"
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "attention_implementation": null,
+  "attributed_setup_runtime_seconds": 0.0,
+  "backend": "cuda",
+  "checkpoint_sha256": "f76662070e9baa282253c98b73dfba1ac4f0a2da7611fc8ff274932c2e5ccd21",
+  "checkpoint_size_bytes": 516633264,
+  "checkpoint_status": "saved",
+  "checkpoint_write_seconds": 0.5362862721085548,
+  "claim_status": "confirmatory",
+  "configuration": {
+    "experiment": {
+      "allow_mps_fallback": false,
+      "checkpoint_policy": "saved",
+      "claim_status": "confirmatory",
+      "config_path": "configs/experiments/main_mamba.yaml",
+      "dataset": "controlled_v2",
+      "dataset_config": {
+        "builder": "scripts/prepare_data.py --version v2 --output data/controlled/v2",
+        "confirmatory_holdout": "test",
+        "holdout_status": "SEALED_UNTIL_PREREGISTERED_EXECUTION",
+        "license": "CC0-1.0",
+        "name": "controlled-associations-v2",
+        "path": "data/controlled/v2",
+        "prior_dataset": "controlled-associations-v1",
+        "version": 2
+      },
+      "deterministic": true,
+      "device": "cuda",
+      "method_configs": {
+        "continued_retain": {
+          "learning_rate": 0.15,
+          "name": "continued_retain",
+          "steps": 15
+        },
+        "counterfactual": {
+          "learning_rate": 0.15,
+          "name": "counterfactual",
+          "steps": 15
+        },
+        "exact_retrain": {
+          "name": "exact_retrain",
+          "trainable": true
+        },
+        "gradient_ascent": {
+          "learning_rate": 0.03,
+          "name": "gradient_ascent",
+          "retain_weight": 1.0,
+          "steps": 8
+        },
+        "npo": {
+          "beta": 0.1,
+          "learning_rate": 0.05,
+          "name": "npo",
+          "reference": "trained_full",
+          "retain_weight": 1.0,
+          "steps": 12
+        },
+        "pcgu": {
+          "learning_rate": 0.15,
+          "name": "pcgu",
+          "partition_aggregation_dimension": -1,
+          "ranking": "ascending_cosine_similarity",
+          "selected_fraction": 0.1,
+          "source": "https://aclanthology.org/2023.findings-acl.375/",
+          "steps": 12,
+          "update_gradient": "replacement_target"
+        },
+        "sham": {
+          "name": "sham",
+          "update_l2_norm": 0.05
+        },
+        "trained_full": {
+          "name": "trained_full",
+          "trainable": false
+        },
+        "untouched": {
+          "name": "untouched",
+          "trainable": false
+        }
+      },
+      "method_overrides": {
+        "continued_retain": {
+          "batch_size": 4,
+          "learning_rate": 5e-05,
+          "steps": 12
+        },
+        "counterfactual": {
+          "batch_size": 4,
+          "learning_rate": 5e-05,
+          "steps": 12
+        },
+        "gradient_ascent": {
+          "learning_rate": 5e-06,
+          "retain_weight": 1.0,
+          "steps": 4
+        },
+        "npo": {
+          "beta": 0.1,
+          "learning_rate": 5e-06,
+          "retain_weight": 1.0,
+          "steps": 4
+        },
+        "pcgu": {
+          "learning_rate": 5e-05,
+          "selected_fraction": 0.1,
+          "steps": 6
+        }
+      },
+      "methods": [
+        "untouched",
+        "trained_full",
+        "exact_retrain",
+        "continued_retain",
+        "sham",
+        "counterfactual",
+        "gradient_ascent",
+        "npo",
+        "pcgu"
+      ],
+      "model": "mamba_130m",
+      "model_config": {
+        "attention_implementation": null,
+        "backend": "huggingface_causal_lm",
+        "family": "state_space",
+        "model_class": "AutoModelForCausalLM",
+        "name": "mamba-130m-hf",
+        "repository": "state-spaces/mamba-130m-hf",
+        "revision": "1e76775",
+        "tokenizer_repository": "state-spaces/mamba-130m-hf",
+        "tokenizer_revision": "1e76775",
+        "trust_remote_code": false
+      },
+      "name": "controlled-main-mamba-130m-v2",
+      "precision": "fp32",
+      "preregistration_path": "docs/preregistration_main.md",
+      "primary_endpoints": {
+        "forgetting": "forget_oracle_kl",
+        "utility": "utility_nll"
+      },
+      "requires_calibration_approval": true,
+      "seeds": [
+        11,
+        29,
+        47
+      ],
+      "track": "controlled_unlearning",
+      "training": {
+        "batch_size": 4,
+        "exact_steps": 20,
+        "learning_rate": 5e-05,
+        "steps": 20
+      }
+    },
+    "method": {
+      "name": "untouched",
+      "trainable": false
+    }
+  },
+  "dataset": "controlled_v2",
+  "dataset_hashes": {
+    "test": "3776547ae88199c9e4bb8ee7e51daafcacba9d9a1ea318741da560edb62c31b1",
+    "train": "2315886ab3eb25b2dee72aa5ab997351b531c9825998163c233b94f1713db05c",
+    "validation": "855f5f9f06eeefd7d18427d20c47453f726974733b3623d15e91046be513d8c3"
+  },
+  "device": "cuda",
+  "device_fallback": {
+    "allowed": false,
+    "mps_environment_enabled": false,
+    "note": null,
+    "observed": false
+  },
+  "device_memory": {
+    "device_memory_allocated_bytes": 16596434944,
+    "peak_device_memory_bytes": 16610136576
+  },
+  "dtype": "fp32",
+  "evaluation_runtime_seconds": 5.2736744694411755,
+  "examples_per_second": 0.0,
+  "experiment_config_sha256": "0c5c9dd622d4d8fd224920739af1d8f14aa89776d4aee93abcafd626ca54c3d3",
+  "experiment_name": "controlled-main-mamba-130m-v2",
+  "final_checkpoint_path": "results/runs/controlled-main-mamba-130m-v2-untouched-s47-f2df84da/checkpoint.pt",
+  "git_commit": "2e9f3b83c23fd96acf8fb4407b3c20cfd09cf3d7",
+  "hardware": {
+    "cpu": "x86_64",
+    "cuda_available": true,
+    "device_memory_bytes": 20937965568,
+    "gpu": "NVIDIA A100-SXM4-80GB MIG 1g.20gb",
+    "hostname": "sg050",
+    "mps_available": false,
+    "platform": "Linux-4.18.0-553.124.1.el8_10.x86_64-x86_64-with-glibc2.28"
+  },
+  "intervention_runtime_seconds": 0.019505470991134644,
+  "method": "untouched",
+  "method_metadata": {
+    "examples_processed": 0,
+    "steps": 0,
+    "tokens_processed": 0
+  },
+  "metrics_path": "results/runs/controlled-main-mamba-130m-v2-untouched-s47-f2df84da/metrics.json",
+  "model_load_seconds": 0.7124604322016239,
+  "model_name": "mamba-130m-hf",
+  "model_repository": "state-spaces/mamba-130m-hf",
+  "model_revision": "1e76775",
+  "optimization_runtime_seconds": 0.019505470991134644,
+  "optimization_work": {
+    "intervention": {
+      "examples_processed": 0,
+      "steps": 0,
+      "tokens_processed": 0
+    },
+    "setup": {
+      "examples_processed": 0,
+      "steps": 0,
+      "tokens_processed": 0
+    }
+  },
+  "peak_process_memory_bytes": 2543960064,
+  "peak_vram_bytes": 16610136576,
+  "predictions_path": "results/runs/controlled-main-mamba-130m-v2-untouched-s47-f2df84da/predictions.jsonl",
+  "preprocessing_seconds": 0.006226595491170883,
+  "preregistration_commit": "005db27a9f0b427bfa3fcc1cbcc3cc19da0c67a6",
+  "random_seed": 47,
+  "reproducibility": {
+    "bitwise_scope": "same software and device stack only",
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": true,
+    "seed": 47
+  },
+  "run_id": "controlled-main-mamba-130m-v2-untouched-s47-f2df84da",
+  "run_set_id": "controlled-main-mamba-130m-v2-0c5c9dd6",
+  "runtime_seconds": 5.29317994043231,
+  "schema_version": 4,
+  "split_hashes": {
+    "forget": "2c939db0264ebc3d9a9922d4a97b6fcce94f5201d381b15252fc106356968eb8",
+    "retain": "a43ca9ee3c2ac353a2a3dc738a1995d6ed07a617cab935e1623bf3e95368e962",
+    "utility": "6cefe0b21880c7e8acf96d10eb19568436bedf434ee29660eaf6f972e204f220"
+  },
+  "status": "COMPLETED",
+  "timestamp_utc": "2026-09-12T04:14:54.510454+00:00",
+  "tokenizer_name": "state-spaces/mamba-130m-hf",
+  "tokenizer_revision": "1e76775",
+  "tokens_per_second": 0.0,
+  "track": "controlled_unlearning",
+  "trainable_parameters": 129135360,
+  "trust_remote_code": false,
+  "versions": {
+    "cuda": "12.4",
+    "cudnn": "90100",
+    "python": "3.12.9",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.51.3"
+  }
+}

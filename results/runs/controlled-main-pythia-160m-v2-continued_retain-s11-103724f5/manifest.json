@@ -1,0 +1,261 @@
+{
+  "attention_implementation": "eager",
+  "attributed_setup_runtime_seconds": 0.0,
+  "backend": "cuda",
+  "checkpoint_sha256": "6fa5aeb26368ffb5f2f1317b8f3eba893ba042f4b6a41b97fe54cf746e9058ac",
+  "checkpoint_size_bytes": 649350482,
+  "checkpoint_status": "saved",
+  "checkpoint_write_seconds": 1.0081160813570023,
+  "claim_status": "confirmatory",
+  "configuration": {
+    "experiment": {
+      "allow_mps_fallback": false,
+      "checkpoint_policy": "saved",
+      "claim_status": "confirmatory",
+      "config_path": "configs/experiments/main.yaml",
+      "dataset": "controlled_v2",
+      "dataset_config": {
+        "builder": "scripts/prepare_data.py --version v2 --output data/controlled/v2",
+        "confirmatory_holdout": "test",
+        "holdout_status": "SEALED_UNTIL_PREREGISTERED_EXECUTION",
+        "license": "CC0-1.0",
+        "name": "controlled-associations-v2",
+        "path": "data/controlled/v2",
+        "prior_dataset": "controlled-associations-v1",
+        "version": 2
+      },
+      "deterministic": true,
+      "device": "cuda",
+      "method_configs": {
+        "continued_retain": {
+          "learning_rate": 0.15,
+          "name": "continued_retain",
+          "steps": 15
+        },
+        "counterfactual": {
+          "learning_rate": 0.15,
+          "name": "counterfactual",
+          "steps": 15
+        },
+        "exact_retrain": {
+          "name": "exact_retrain",
+          "trainable": true
+        },
+        "gradient_ascent": {
+          "learning_rate": 0.03,
+          "name": "gradient_ascent",
+          "retain_weight": 1.0,
+          "steps": 8
+        },
+        "npo": {
+          "beta": 0.1,
+          "learning_rate": 0.05,
+          "name": "npo",
+          "reference": "trained_full",
+          "retain_weight": 1.0,
+          "steps": 12
+        },
+        "pcgu": {
+          "learning_rate": 0.15,
+          "name": "pcgu",
+          "partition_aggregation_dimension": -1,
+          "ranking": "ascending_cosine_similarity",
+          "selected_fraction": 0.1,
+          "source": "https://aclanthology.org/2023.findings-acl.375/",
+          "steps": 12,
+          "update_gradient": "replacement_target"
+        },
+        "sham": {
+          "name": "sham",
+          "update_l2_norm": 0.05
+        },
+        "trained_full": {
+          "name": "trained_full",
+          "trainable": false
+        },
+        "untouched": {
+          "name": "untouched",
+          "trainable": false
+        }
+      },
+      "method_overrides": {
+        "continued_retain": {
+          "batch_size": 4,
+          "learning_rate": 1e-05,
+          "steps": 12
+        },
+        "counterfactual": {
+          "batch_size": 4,
+          "learning_rate": 1e-05,
+          "steps": 12
+        },
+        "gradient_ascent": {
+          "learning_rate": 1e-06,
+          "retain_weight": 1.0,
+          "steps": 4
+        },
+        "npo": {
+          "beta": 0.1,
+          "learning_rate": 1e-06,
+          "retain_weight": 1.0,
+          "steps": 4
+        },
+        "pcgu": {
+          "learning_rate": 1e-05,
+          "selected_fraction": 0.1,
+          "steps": 6
+        }
+      },
+      "methods": [
+        "untouched",
+        "trained_full",
+        "exact_retrain",
+        "continued_retain",
+        "sham",
+        "counterfactual",
+        "gradient_ascent",
+        "npo",
+        "pcgu"
+      ],
+      "model": "pythia_160m",
+      "model_config": {
+        "attention_implementation": "eager",
+        "backend": "huggingface_causal_lm",
+        "family": "transformer",
+        "model_class": "AutoModelForCausalLM",
+        "name": "pythia-160m",
+        "repository": "EleutherAI/pythia-160m",
+        "revision": "50f5173",
+        "tokenizer_repository": "EleutherAI/pythia-160m",
+        "tokenizer_revision": "50f5173",
+        "trust_remote_code": false
+      },
+      "name": "controlled-main-pythia-160m-v2",
+      "precision": "fp32",
+      "preregistration_path": "docs/preregistration_main.md",
+      "primary_endpoints": {
+        "forgetting": "forget_oracle_kl",
+        "utility": "utility_nll"
+      },
+      "requires_calibration_approval": true,
+      "seeds": [
+        11,
+        29,
+        47
+      ],
+      "track": "controlled_unlearning",
+      "training": {
+        "batch_size": 4,
+        "exact_steps": 20,
+        "learning_rate": 1e-05,
+        "steps": 20
+      }
+    },
+    "method": {
+      "batch_size": 4,
+      "learning_rate": 1e-05,
+      "name": "continued_retain",
+      "steps": 12
+    }
+  },
+  "dataset": "controlled_v2",
+  "dataset_hashes": {
+    "test": "3776547ae88199c9e4bb8ee7e51daafcacba9d9a1ea318741da560edb62c31b1",
+    "train": "2315886ab3eb25b2dee72aa5ab997351b531c9825998163c233b94f1713db05c",
+    "validation": "855f5f9f06eeefd7d18427d20c47453f726974733b3623d15e91046be513d8c3"
+  },
+  "device": "cuda",
+  "device_fallback": {
+    "allowed": false,
+    "mps_environment_enabled": false,
+    "note": null,
+    "observed": false
+  },
+  "device_memory": {
+    "device_memory_allocated_bytes": 5261445120,
+    "peak_device_memory_bytes": 7209322496
+  },
+  "dtype": "fp32",
+  "evaluation_runtime_seconds": 1.2490683011710644,
+  "examples_per_second": 49.07701930676074,
+  "experiment_config_sha256": "ff25e6572d3e0d7e6c3a12c6567d196cd3a2efd66a2651353baee2dc877f2dfd",
+  "experiment_name": "controlled-main-pythia-160m-v2",
+  "final_checkpoint_path": "results/runs/controlled-main-pythia-160m-v2-continued_retain-s11-103724f5/checkpoint.pt",
+  "git_commit": "2e9f3b83c23fd96acf8fb4407b3c20cfd09cf3d7",
+  "hardware": {
+    "cpu": "x86_64",
+    "cuda_available": true,
+    "device_memory_bytes": 20937965568,
+    "gpu": "NVIDIA A100-SXM4-80GB MIG 2g.20gb",
+    "hostname": "sg050",
+    "mps_available": false,
+    "platform": "Linux-4.18.0-553.124.1.el8_10.x86_64-x86_64-with-glibc2.28"
+  },
+  "intervention_runtime_seconds": 0.9780545085668564,
+  "method": "continued_retain",
+  "method_metadata": {
+    "batch_size": 4,
+    "examples_processed": 48,
+    "parameter_l2_distance_from_full": 0.37011870106802425,
+    "seed": 112,
+    "steps": 12,
+    "tokens_processed": 54
+  },
+  "metrics_path": "results/runs/controlled-main-pythia-160m-v2-continued_retain-s11-103724f5/metrics.json",
+  "model_load_seconds": 5.342437479645014,
+  "model_name": "pythia-160m",
+  "model_repository": "EleutherAI/pythia-160m",
+  "model_revision": "50f5173",
+  "optimization_runtime_seconds": 0.9780545085668564,
+  "optimization_work": {
+    "intervention": {
+      "examples_processed": 48,
+      "steps": 12,
+      "tokens_processed": 54
+    },
+    "setup": {
+      "examples_processed": 0,
+      "steps": 0,
+      "tokens_processed": 0
+    }
+  },
+  "peak_process_memory_bytes": 1979228160,
+  "peak_vram_bytes": 7209322496,
+  "predictions_path": "results/runs/controlled-main-pythia-160m-v2-continued_retain-s11-103724f5/predictions.jsonl",
+  "preprocessing_seconds": 0.006792023777961731,
+  "preregistration_commit": "005db27a9f0b427bfa3fcc1cbcc3cc19da0c67a6",
+  "random_seed": 11,
+  "reproducibility": {
+    "bitwise_scope": "same software and device stack only",
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": true,
+    "seed": 11
+  },
+  "run_id": "controlled-main-pythia-160m-v2-continued_retain-s11-103724f5",
+  "run_set_id": "controlled-main-pythia-160m-v2-ff25e657",
+  "runtime_seconds": 2.2271228097379208,
+  "schema_version": 4,
+  "split_hashes": {
+    "forget": "2c939db0264ebc3d9a9922d4a97b6fcce94f5201d381b15252fc106356968eb8",
+    "retain": "a43ca9ee3c2ac353a2a3dc738a1995d6ed07a617cab935e1623bf3e95368e962",
+    "utility": "6cefe0b21880c7e8acf96d10eb19568436bedf434ee29660eaf6f972e204f220"
+  },
+  "status": "COMPLETED",
+  "timestamp_utc": "2026-09-12T04:11:49.291726+00:00",
+  "tokenizer_name": "EleutherAI/pythia-160m",
+  "tokenizer_revision": "50f5173",
+  "tokens_per_second": 55.21164672010583,
+  "track": "controlled_unlearning",
+  "trainable_parameters": 162322944,
+  "trust_remote_code": false,
+  "versions": {
+    "cuda": "12.4",
+    "cudnn": "90100",
+    "python": "3.12.9",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.51.3"
+  }
+}

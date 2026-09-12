@@ -1,0 +1,32 @@
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+Terminal run cells (completed or explicitly failed):
+controlled-main-pythia-160m-v2-untouched-s11-93483f4c
+controlled-main-pythia-160m-v2-trained_full-s11-582895d4
+controlled-main-pythia-160m-v2-exact_retrain-s11-17816876
+controlled-main-pythia-160m-v2-continued_retain-s11-103724f5
+controlled-main-pythia-160m-v2-sham-s11-c2b01cd5
+controlled-main-pythia-160m-v2-counterfactual-s11-90214176
+controlled-main-pythia-160m-v2-gradient_ascent-s11-7c1cf0d2
+controlled-main-pythia-160m-v2-npo-s11-fc6cdc7b
+controlled-main-pythia-160m-v2-pcgu-s11-87aefee0
+controlled-main-pythia-160m-v2-untouched-s29-d7de8dea
+controlled-main-pythia-160m-v2-trained_full-s29-e769e921
+controlled-main-pythia-160m-v2-exact_retrain-s29-f7aeb624
+controlled-main-pythia-160m-v2-continued_retain-s29-70673b74
+controlled-main-pythia-160m-v2-sham-s29-6db4bb1b
+controlled-main-pythia-160m-v2-counterfactual-s29-8aedd5d0
+controlled-main-pythia-160m-v2-gradient_ascent-s29-dbbafbef
+controlled-main-pythia-160m-v2-npo-s29-3a9170fb
+controlled-main-pythia-160m-v2-pcgu-s29-fdd9e914
+controlled-main-pythia-160m-v2-untouched-s47-56b63d3c
+controlled-main-pythia-160m-v2-trained_full-s47-6b4792c2
+controlled-main-pythia-160m-v2-exact_retrain-s47-966e0124
+controlled-main-pythia-160m-v2-continued_retain-s47-5c48fe06
+controlled-main-pythia-160m-v2-sham-s47-4fb9bec0
+controlled-main-pythia-160m-v2-counterfactual-s47-c1f0b18f
+controlled-main-pythia-160m-v2-gradient_ascent-s47-41ec3280
+controlled-main-pythia-160m-v2-npo-s47-642ecf71
+controlled-main-pythia-160m-v2-pcgu-s47-8af8b549
