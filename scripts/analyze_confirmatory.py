@@ -327,7 +327,7 @@ def pareto_methods(rows: list[dict], model: str, axes: tuple[str, ...]) -> list[
 def write_csv(path: Path, rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -523,7 +523,8 @@ def write_report(rows: list[dict], statistics: list[dict]) -> None:
             "For Mamba, no method met the joint criterion. PCGU's forgetting interval was below "
             "zero, while its utility interval crossed zero. Counterfactual training had the "
             "largest mean forgetting and utility improvements, but both intervals crossed zero. "
-            "Continued retain training moved both models farther from the oracle on forget examples.",
+            "Continued retain training moved both models farther from the oracle on forget "
+            "examples.",
             "",
             f"No Holm-adjusted comparison reached 0.05 (smallest adjusted p = "
             f"{min(row['p_holm'] for row in statistics):.4f}). This is consistent with the limited "
