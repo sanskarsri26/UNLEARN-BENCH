@@ -263,6 +263,7 @@ def summary_rows(cells: dict[tuple[str, str, int], dict]) -> list[dict]:
                     "retain_mean": mean(retain),
                     "retain_sd": stdev(retain),
                     "optimization_seconds_mean": mean(runtime),
+                    "optimization_seconds_sd": stdev(runtime),
                     "optimization_seconds_total": sum(runtime),
                     "peak_vram_gib": max(
                         item["manifest"]["peak_vram_bytes"] for item in values
@@ -337,6 +338,17 @@ def write_figures(rows: list[dict], seed_values: list[dict]) -> None:
     output = ROOT / "reports" / "figures"
     output.mkdir(parents=True, exist_ok=True)
     colors = dict(zip(METHODS, plt.cm.tab10.colors, strict=False))
+    labels = {
+        "untouched": "Untouched",
+        "trained_full": "Full trained",
+        "exact_retrain": "Exact retrain",
+        "continued_retain": "Continued retain",
+        "sham": "Sham",
+        "counterfactual": "Counterfactual",
+        "gradient_ascent": "Gradient ascent",
+        "npo": "NPO",
+        "pcgu": "PCGU",
+    }
     for x_axis, filename, label in (
         ("utility_mean", "main_forgetting_utility.png", "Utility NLL (lower is better)"),
         (
@@ -345,17 +357,41 @@ def write_figures(rows: list[dict], seed_values: list[dict]) -> None:
             "Mean optimization time, seconds (lower is better)",
         ),
     ):
-        figure, axes = plt.subplots(1, 2, figsize=(12, 5), constrained_layout=True)
+        figure, axes = plt.subplots(1, 2, figsize=(12, 5.6))
         for axis, model in zip(axes, EXPERIMENTS.values(), strict=True):
             for row in (item for item in rows if item["model"] == model):
-                axis.scatter(
-                    row[x_axis], row["forget_mean"], color=colors[row["method"]], s=55
+                x_error = (
+                    row["utility_sd"]
+                    if x_axis == "utility_mean"
+                    else row["optimization_seconds_sd"]
                 )
-                axis.annotate(row["method"], (row[x_axis], row["forget_mean"]), fontsize=7)
+                axis.errorbar(
+                    row[x_axis],
+                    row["forget_mean"],
+                    xerr=x_error,
+                    yerr=row["forget_sd"],
+                    marker="o",
+                    markersize=7,
+                    capsize=2,
+                    color=colors[row["method"]],
+                    linestyle="none",
+                    label=labels[row["method"]],
+                )
             axis.set_title(model)
             axis.set_xlabel(label)
             axis.set_ylabel("Forget KL to exact retrain (lower is better)")
             axis.grid(alpha=0.25)
+        handles, legend_labels = axes[0].get_legend_handles_labels()
+        figure.legend(
+            handles,
+            legend_labels,
+            loc="lower center",
+            ncol=5,
+            frameon=False,
+            bbox_to_anchor=(0.5, 0.0),
+        )
+        figure.suptitle("Confirmatory forgetting trade-off (mean ± seed SD)")
+        figure.tight_layout(rect=(0, 0.12, 1, 0.95))
         figure.savefig(output / filename, dpi=220)
         plt.close(figure)
 
@@ -379,6 +415,15 @@ def write_figures(rows: list[dict], seed_values: list[dict]) -> None:
 
 
 def write_report(rows: list[dict], statistics: list[dict]) -> None:
+    def comparison(model: str, endpoint: str, method: str) -> dict:
+        return next(
+            row
+            for row in statistics
+            if row["model"] == model
+            and row["endpoint"] == endpoint
+            and row["method"] == method
+        )
+
     frontiers = {
         model: {
             "forget_utility": pareto_methods(rows, model, ("forget_mean", "utility_mean")),
@@ -388,6 +433,12 @@ def write_report(rows: list[dict], statistics: list[dict]) -> None:
         }
         for model in EXPERIMENTS.values()
     }
+    pythia_counterfactual_forget = comparison(
+        "pythia-160m", "forget_oracle_kl", "counterfactual"
+    )["effect"]
+    pythia_counterfactual_utility = comparison(
+        "pythia-160m", "utility_nll", "counterfactual"
+    )["effect"]
     lines = [
         "# Main confirmatory results",
         "",
@@ -460,6 +511,33 @@ def write_report(rows: list[dict], statistics: list[dict]) -> None:
         )
     lines.extend(
         [
+            "",
+            "## Confirmatory interpretation",
+            "",
+            "For Pythia, counterfactual training produced the largest mean forgetting change "
+            f"from full-trained ({pythia_counterfactual_forget:.4f}) but worsened utility "
+            f"({pythia_counterfactual_utility:.4f}). "
+            "Gradient ascent and NPO met the preregistered joint criterion; PCGU improved mean "
+            "forgetting with an interval below zero, but its utility interval crossed zero.",
+            "",
+            "For Mamba, no method met the joint criterion. PCGU's forgetting interval was below "
+            "zero, while its utility interval crossed zero. Counterfactual training had the "
+            "largest mean forgetting and utility improvements, but both intervals crossed zero. "
+            "Continued retain training moved both models farther from the oracle on forget examples.",
+            "",
+            f"No Holm-adjusted comparison reached 0.05 (smallest adjusted p = "
+            f"{min(row['p_holm'] for row in statistics):.4f}). This is consistent with the limited "
+            "four-group forget holdout and prevents strong significance claims despite several "
+            "bootstrap intervals excluding zero.",
+            "",
+            "## Compute, failures, and deviations",
+            "",
+            "All 54 cells completed with no technical, OOM, unsupported-device, numerical, or "
+            "method failures. Scheduler elapsed time totaled 413 A100-seconds (0.115 GPU-hours). "
+            "Peak allocation was 9.74 GiB for Pythia and 15.84 GiB for Mamba. The only execution "
+            "deviation was moving two zero-runtime pending jobs from `htc` to the available "
+            "`lightwork` A100 MIG pool; frozen experiment settings did not change. Mamba used the "
+            "predeclared sequential eager fallback.",
             "",
             "## Interpretation discipline",
             "",
