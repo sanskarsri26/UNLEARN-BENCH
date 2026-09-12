@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -73,6 +74,17 @@ class ControlledDataTests(unittest.TestCase):
             build_controlled_v2_dataset(destination)
             with self.assertRaises(FileExistsError):
                 build_controlled_v2_dataset(destination)
+
+    def test_v2_validator_rejects_manifest_tampering(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "v2"
+            build_controlled_v2_dataset(destination)
+            manifest_path = destination / "manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"]["test"]["sha256"] = "0" * 64
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "manifest mismatch for test"):
+                validate_controlled_v2(destination)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,11 @@ from unlearn_bench.utils.reproducibility import atomic_json, sha256_file, sha256
 
 DATASET_VERSION = "controlled-associations-v2"
 EXPECTED_COUNTS = {"train": 12, "validation": 12, "test": 40}
+EXPECTED_PARTITIONS = {
+    "train": {"forget": 4, "retain": 6, "utility": 2},
+    "validation": {"forget": 4, "retain": 6, "utility": 2},
+    "test": {"forget": 12, "retain": 18, "utility": 10},
+}
 
 CONFIRMATORY_TEMPLATES = (
     "Consult the registry entry for {entity}; the code shown is",
@@ -121,6 +126,13 @@ def _confirmatory_rows() -> list[dict[str, Any]]:
 
 def validate_controlled_v2(output_dir: str | Path) -> None:
     output_dir = Path(output_dir)
+    manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("dataset") != DATASET_VERSION:
+        raise ValueError("Controlled v2 manifest has the wrong dataset identity")
+    if manifest.get("confirmatory_holdout") != "test":
+        raise ValueError("Controlled v2 manifest must identify test as the confirmatory holdout")
+    if manifest.get("holdout_status") != "SEALED_UNTIL_PREREGISTERED_EXECUTION":
+        raise ValueError("Controlled v2 manifest has the wrong holdout status")
     seen_ids: set[str] = set()
     seen_hashes: set[str] = set()
     for split, expected_count in EXPECTED_COUNTS.items():
@@ -129,6 +141,19 @@ def validate_controlled_v2(output_dir: str | Path) -> None:
             rows = [json.loads(line) for line in handle if line.strip()]
         if len(rows) != expected_count:
             raise ValueError(f"Expected {expected_count} {split} examples, found {len(rows)}")
+        if any(not isinstance(row.get("partition"), str) for row in rows):
+            raise ValueError(f"Malformed partition in {split}")
+        partitions = dict(sorted(Counter(row.get("partition") for row in rows).items()))
+        if partitions != EXPECTED_PARTITIONS[split]:
+            raise ValueError(f"Unexpected {split} partition counts: {partitions}")
+        expected_file = {
+            "path": path.name,
+            "sha256": sha256_file(path),
+            "count": len(rows),
+            "partitions": partitions,
+        }
+        if manifest.get("files", {}).get(split) != expected_file:
+            raise ValueError(f"Controlled v2 manifest mismatch for {split}")
         for row in rows:
             required = {
                 "category",
@@ -145,6 +170,10 @@ def validate_controlled_v2(output_dir: str | Path) -> None:
                 raise ValueError(f"Malformed record: {row.get('id', '<unknown>')}")
             if row["source"] != DATASET_VERSION or row["split"] != split:
                 raise ValueError(f"Dataset provenance mismatch for {row['id']}")
+            if row["partition"] == "forget" and not row.get("replacement"):
+                raise ValueError(f"Forget record lacks a replacement: {row['id']}")
+            if row["partition"] != "forget" and row.get("replacement") is not None:
+                raise ValueError(f"Non-forget record has a replacement: {row['id']}")
             expected_hash = sha256_value({"prompt": row["prompt"], "completion": row["completion"]})
             if row["hash"] != expected_hash:
                 raise ValueError(f"Content hash mismatch: {row['id']}")
@@ -182,6 +211,6 @@ def build_controlled_v2_dataset(output_dir: str | Path) -> dict[str, Any]:
             "count": len(rows),
             "partitions": dict(sorted(Counter(row["partition"] for row in rows).items())),
         }
-    validate_controlled_v2(output_dir)
     atomic_json(output_dir / "manifest.json", summary)
+    validate_controlled_v2(output_dir)
     return summary
