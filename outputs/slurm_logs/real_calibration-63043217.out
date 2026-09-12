@@ -1,0 +1,15 @@
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+The fast path is not available because one of `(selective_state_update, selective_scan_fn, causal_conv1d_fn, causal_conv1d_update, mamba_inner_fn)` is None. Falling back to the sequential implementation of Mamba, as use_mambapy is set to False. To install follow https://github.com/state-spaces/mamba/#installation and https://github.com/Dao-AILab/causal-conv1d. For the mamba.py backend, follow https://github.com/alxndrTL/mamba.py.
+Completed runs:
+controlled-calibration-mamba-130m-v1-untouched-s11-e5f09db3
+controlled-calibration-mamba-130m-v1-trained_full-s11-5ac24eb7
+controlled-calibration-mamba-130m-v1-exact_retrain-s11-5b0ba960
+controlled-calibration-mamba-130m-v1-continued_retain-s11-5108c635
+controlled-calibration-mamba-130m-v1-sham-s11-24449ad7
+controlled-calibration-mamba-130m-v1-counterfactual-s11-07eada2d
+controlled-calibration-mamba-130m-v1-gradient_ascent-s11-9e14ff1e
+controlled-calibration-mamba-130m-v1-npo-s11-c103b5c9
+controlled-calibration-mamba-130m-v1-pcgu-s11-95582419
