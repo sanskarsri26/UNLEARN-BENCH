@@ -1,0 +1,10 @@
+name: mamba-370m-hf
+family: state_space
+backend: huggingface_causal_lm
+repository: state-spaces/mamba-370m-hf
+revision: b519127
+tokenizer_revision: b519127
+model_class: AutoModelForCausalLM
+tokenizer_repository: state-spaces/mamba-370m-hf
+trust_remote_code: false
+attention_implementation: null

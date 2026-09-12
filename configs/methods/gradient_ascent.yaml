@@ -1,0 +1,4 @@
+name: gradient_ascent
+steps: 8
+learning_rate: 0.03
+retain_weight: 1.0

@@ -1,0 +1,14 @@
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+Completed runs:
+controlled-method-calibration-pythia-160m-v2-untouched-s11-60860dd0
+controlled-method-calibration-pythia-160m-v2-trained_full-s11-674d2fcb
+controlled-method-calibration-pythia-160m-v2-exact_retrain-s11-15b74dd0
+controlled-method-calibration-pythia-160m-v2-continued_retain-s11-c8e6edb0
+controlled-method-calibration-pythia-160m-v2-sham-s11-c9312f34
+controlled-method-calibration-pythia-160m-v2-counterfactual-s11-b94e3a17
+controlled-method-calibration-pythia-160m-v2-gradient_ascent-s11-5f3488a2
+controlled-method-calibration-pythia-160m-v2-npo-s11-82995878
+controlled-method-calibration-pythia-160m-v2-pcgu-s11-9bbd94bb

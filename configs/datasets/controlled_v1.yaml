@@ -1,0 +1,5 @@
+name: controlled-associations-v1
+path: data/controlled/v1
+version: 1
+builder: scripts/prepare_data.py
+license: CC0-1.0

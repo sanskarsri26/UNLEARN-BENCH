@@ -1,0 +1,8 @@
+name: pcgu
+steps: 12
+learning_rate: 0.15
+selected_fraction: 0.1
+partition_aggregation_dimension: -1
+ranking: ascending_cosine_similarity
+update_gradient: replacement_target
+source: https://aclanthology.org/2023.findings-acl.375/

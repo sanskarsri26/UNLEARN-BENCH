@@ -1,0 +1,14 @@
+{
+  "forget_log_probability_margin": -6.536857525507609,
+  "forget_nll": 8.08565898736318,
+  "forget_oracle_kl": 0.0,
+  "forget_target_probability": 0.0026140043930666934,
+  "num_examples": 40,
+  "primary_forgetting_metric": "forget_oracle_kl",
+  "primary_utility_metric": "utility_nll",
+  "retain_accuracy": 0.6666666666666666,
+  "retain_nll": 2.9083675482931235,
+  "utility_accuracy": 0.0,
+  "utility_nll": 4.362983560562133,
+  "utility_perplexity": 78.49096797788228
+}

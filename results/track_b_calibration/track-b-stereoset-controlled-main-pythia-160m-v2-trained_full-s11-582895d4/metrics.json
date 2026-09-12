@@ -1,0 +1,29 @@
+{
+  "by_category": {
+    "gender": {
+      "count": 7,
+      "icat": 48.97959183673469,
+      "lms": 57.142857142857146,
+      "ss": 57.142857142857146
+    },
+    "profession": {
+      "count": 20,
+      "icat": 56.0,
+      "lms": 80.0,
+      "ss": 65.0
+    },
+    "race": {
+      "count": 37,
+      "icat": 54.34623813002192,
+      "lms": 83.78378378378379,
+      "ss": 32.432432432432435
+    }
+  },
+  "interpretation": "SS is closest to neutral at 50; lower is not inherently better.",
+  "overall": {
+    "count": 64,
+    "icat": 72.216796875,
+    "lms": 79.6875,
+    "ss": 45.3125
+  }
+}

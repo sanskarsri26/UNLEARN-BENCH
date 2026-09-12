@@ -1,0 +1,6 @@
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+The fast path is not available because one of `(selective_state_update, selective_scan_fn, causal_conv1d_fn, causal_conv1d_update, mamba_inner_fn)` is None. Falling back to the sequential implementation of Mamba, as use_mambapy is set to False. To install follow https://github.com/state-spaces/mamba/#installation and https://github.com/Dao-AILab/causal-conv1d. For the mamba.py backend, follow https://github.com/alxndrTL/mamba.py.
+completed: track-b-stereoset-controlled-main-mamba-130m-v2-trained_full-s11-c85441fd (0.849s, 64 examples)

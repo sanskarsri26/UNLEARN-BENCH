@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lightweight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e '.[dev]'
+      - run: ruff check src scripts tests
+      - run: python scripts/validate_configs.py
+      - run: python scripts/prepare_data.py
+      - run: pytest
+      - name: CPU fixture smoke
+        run: python scripts/run_experiment.py --config configs/experiments/smoke.yaml
+      - run: python scripts/validate_results.py
+      - name: Validate Track B hashes and recomputed metrics
+        run: python scripts/analyze_track_b.py --validate-only

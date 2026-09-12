@@ -1,0 +1,9 @@
+{
+  "elapsed": "00:00:20",
+  "error_type": "ValueError",
+  "failed_before_result_write": true,
+  "job_id": "63045727",
+  "model": "mamba-130m-hf",
+  "reason": "Empty causal prompt in 19 post-calibration StereoSet items",
+  "state": "TECHNICAL_FAILURE"
+}

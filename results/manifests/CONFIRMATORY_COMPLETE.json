@@ -1,0 +1,39 @@
+{
+  "bootstrap_draws": 10000,
+  "completed_cells": 54,
+  "failed_cells": 0,
+  "pareto_frontiers": {
+    "mamba-130m-hf": {
+      "forget_compute": [
+        "untouched",
+        "exact_retrain",
+        "sham",
+        "counterfactual",
+        "gradient_ascent",
+        "npo"
+      ],
+      "forget_utility": [
+        "exact_retrain",
+        "counterfactual"
+      ]
+    },
+    "pythia-160m": {
+      "forget_compute": [
+        "untouched",
+        "exact_retrain",
+        "counterfactual",
+        "gradient_ascent",
+        "npo"
+      ],
+      "forget_utility": [
+        "exact_retrain",
+        "counterfactual",
+        "gradient_ascent",
+        "npo",
+        "pcgu"
+      ]
+    }
+  },
+  "preregistration_commit": "005db27a9f0b427bfa3fcc1cbcc3cc19da0c67a6",
+  "validated_checkpoint_hashes": 54
+}

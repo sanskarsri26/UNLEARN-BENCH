@@ -1,0 +1,20 @@
+name: controlled-pcgu-ablation-v1
+track: controlled_unlearning
+claim_status: exploratory
+device: auto
+precision: auto
+allow_mps_fallback: false
+deterministic: true
+model: pythia_410m
+dataset: controlled_v1
+methods: [pcgu]
+seeds: [11, 29, 47]
+requires_calibration_approval: true
+training:
+  steps: 500
+  learning_rate: 0.00001
+primary_endpoints:
+  forgetting: forget_oracle_kl
+  utility: utility_nll
+ablation_axis: selected_fraction
+ablation_values: [0.01, 0.05, 0.1]

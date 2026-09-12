@@ -1,0 +1,21 @@
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05
+Traceback (most recent call last):
+  File "/scratch/ssriva94/UNLEARN-BENCH/scripts/evaluate_stereoset_track_b.py", line 280, in <module>
+    main()
+  File "/scratch/ssriva94/UNLEARN-BENCH/scripts/evaluate_stereoset_track_b.py", line 269, in main
+    evaluate(
+  File "/scratch/ssriva94/UNLEARN-BENCH/scripts/evaluate_stereoset_track_b.py", line 188, in evaluate
+    predictions = score_items(model, tokenizer, items, batch_size)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/ssriva94/UNLEARN-BENCH/scripts/evaluate_stereoset_track_b.py", line 121, in score_items
+    batch = causal_batch(tokenizer, rows, next(model.parameters()).device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/ssriva94/UNLEARN-BENCH/src/unlearn_bench/models/causal.py", line 51, in causal_batch
+    encoded = [_encode_example(tokenizer, row["prompt"], row[target_field]) for row in records]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/ssriva94/UNLEARN-BENCH/src/unlearn_bench/models/causal.py", line 40, in _encode_example
+    raise ValueError(f"Could not identify completion tokens for prompt {prompt!r}")
+ValueError: Could not identify completion tokens for prompt ''

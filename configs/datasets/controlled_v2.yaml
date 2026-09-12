@@ -1,0 +1,8 @@
+name: controlled-associations-v2
+path: data/controlled/v2
+version: 2
+builder: scripts/prepare_data.py --version v2 --output data/controlled/v2
+license: CC0-1.0
+prior_dataset: controlled-associations-v1
+confirmatory_holdout: test
+holdout_status: SEALED_UNTIL_PREREGISTERED_EXECUTION

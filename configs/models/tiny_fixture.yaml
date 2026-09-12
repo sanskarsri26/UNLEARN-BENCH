@@ -1,0 +1,9 @@
+name: tiny-association-fixture
+backend: tiny_association
+revision: unlearn-bench-v1
+tokenizer_revision: unlearn-bench-v1
+tokenizer_repository: unlearn-bench-vocabulary-v1
+trust_remote_code: false
+attention_implementation: null
+hidden_size: 24
+intended_use: CI and pipeline calibration only

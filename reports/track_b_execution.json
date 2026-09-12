@@ -1,0 +1,31 @@
+{
+  "analysis_commit_before_results": "8f9bc8a6547b2a879e7a1b033aba94d3863cfbb3",
+  "cells_completed": 54,
+  "claim_status": "exploratory",
+  "dataset_sha256": "73a0f31b711688112602e4c3ac6ab1e1a7cadcdd67df6c6fd55501c889676c90",
+  "device": "cuda",
+  "dtype": "fp32",
+  "failed_attempt_jobs": [63045726, 63045727],
+  "failed_attempt_scored_cells": 0,
+  "full_retry_jobs": {
+    "mamba-130m-hf": {
+      "elapsed_seconds": 741,
+      "job_id": 63045852,
+      "state": "COMPLETED"
+    },
+    "pythia-160m": {
+      "elapsed_seconds": 254,
+      "job_id": 63045851,
+      "state": "COMPLETED"
+    }
+  },
+  "maximum_peak_vram_bytes": 1611462656,
+  "models": 2,
+  "methods": 9,
+  "scheduler_gpu_seconds": 995,
+  "scorer_runtime_seconds_total": 859.0346043892205,
+  "scoring_code_commit": "b63deb4f3be9ebae1e9775287aa0917b8b970965",
+  "seeds": 3,
+  "source_track_a_preregistration_commit": "005db27a9f0b427bfa3fcc1cbcc3cc19da0c67a6",
+  "track": "external_bias_generalization"
+}
