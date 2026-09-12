@@ -140,8 +140,7 @@ Core commands:
 python scripts/prepare_data.py
 python scripts/run_experiment.py --config configs/experiments/smoke.yaml --device cpu --precision fp32
 python scripts/run_experiment.py --config configs/experiments/smoke.yaml --method pcgu --seed 11 --device cpu --precision fp32
-MAIN_CONFIG=configs/experiments/main.yaml sbatch scripts/slurm_main.sh
-MAIN_CONFIG=configs/experiments/main_mamba.yaml sbatch scripts/slurm_main.sh
+for c in configs/experiments/main.yaml configs/experiments/main_mamba.yaml; do MAIN_CONFIG="$c" sbatch scripts/slurm_main.sh; done
 python scripts/evaluate.py --run RUN_ID
 python scripts/aggregate_results.py
 python scripts/analyze_confirmatory.py

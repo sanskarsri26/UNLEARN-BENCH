@@ -34,8 +34,7 @@ and resolved experiment configuration explicitly enable it.
 The original Slurm entry points were:
 
 ```bash
-MAIN_CONFIG=configs/experiments/main.yaml sbatch scripts/slurm_main.sh
-MAIN_CONFIG=configs/experiments/main_mamba.yaml sbatch scripts/slurm_main.sh
+for c in configs/experiments/main.yaml configs/experiments/main_mamba.yaml; do MAIN_CONFIG="$c" sbatch scripts/slurm_main.sh; done
 ```
 
 `python scripts/analyze_confirmatory.py` strictly requires all 54 retained checkpoints and verifies
