@@ -181,7 +181,7 @@ def evaluate(
     model_config = cells[0][1]["configuration"]["experiment"]["model_config"]
     set_seed(0, deterministic=True)
     model, tokenizer = load_causal_lm(model_config, context)
-    for manifest_path, source in cells:
+    for _manifest_path, source in cells:
         run_id = f"track-b-stereoset-{source['run_id']}"
         destination = output_root / run_id
         if (destination / "manifest.json").is_file():

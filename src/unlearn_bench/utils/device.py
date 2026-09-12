@@ -6,7 +6,6 @@ from typing import Any
 
 import torch
 
-
 DEVICE_CHOICES = ("auto", "cuda", "mps", "cpu")
 PRECISION_CHOICES = ("auto", "fp32", "fp16", "bf16")
 

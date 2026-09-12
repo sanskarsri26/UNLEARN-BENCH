@@ -17,8 +17,8 @@ from unlearn_bench.data import load_records, validate_dataset
 from unlearn_bench.evaluation import evaluate_causal_lm, evaluate_model, metrics_from_predictions
 from unlearn_bench.manifest import validate_failure_record, validate_run_manifest
 from unlearn_bench.methods import apply_hf_method, apply_method, supervised_train, train_causal_lm
-from unlearn_bench.methods.hf import clone_causal_lm
 from unlearn_bench.methods.common import clone_model, trainable_parameter_count
+from unlearn_bench.methods.hf import clone_causal_lm
 from unlearn_bench.models import TinyAssociationLM, build_vocabulary, causal_batch, load_causal_lm
 from unlearn_bench.preregistration import load_and_validate_marker
 from unlearn_bench.utils.device import memory_metrics, reset_peak_memory, select_device, synchronize
@@ -305,16 +305,24 @@ def run_experiment(
             if run_dir.exists():
                 raise RuntimeError(f"Incomplete existing run directory requires review: {run_dir}")
 
-            def record_failure(stage: str, error: Exception) -> None:
+            def record_failure(
+                stage: str,
+                error: Exception,
+                *,
+                failure_run_dir: Path = run_dir,
+                failure_run_id: str = run_id,
+                failure_method: str = method,
+                failure_seed: int = seed,
+            ) -> None:
                 _write_failure(
                     root,
-                    run_dir,
-                    run_id=run_id,
+                    failure_run_dir,
+                    run_id=failure_run_id,
                     run_set_id=run_set_id,
                     config=config,
                     model_name=model_config["name"],
-                    method=method,
-                    seed=seed,
+                    method=failure_method,
+                    seed=failure_seed,
                     config_hash=experiment_config_sha256,
                     preregistration_commit=(
                         calibration_marker["preregistration_commit"]

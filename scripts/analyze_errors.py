@@ -5,7 +5,6 @@ from __future__ import annotations
 import csv
 import json
 import os
-from collections import defaultdict
 from pathlib import Path
 from statistics import mean, stdev
 

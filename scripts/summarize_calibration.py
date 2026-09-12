@@ -106,15 +106,18 @@ def main() -> None:
             "implementation. This is a kernel implementation fallback on CUDA, not an MPS-to-CPU "
             "device fallback. No architecture was substituted.",
             "",
-            "The current session is Linux/x86_64, not the target MacBook Air M3. MPS compatibility, "
+            "The current session is Linux/x86_64, not the target MacBook Air M3. MPS "
+            "compatibility, "
             "CPU fallback behavior, sustained thermal throughput, and M3 memory therefore remain "
             "unmeasured. No local-feasibility classification is inferred from A100 data.",
             "",
             "## Scientific interpretation",
             "",
-            "The calibration endpoints were inspected only to detect gross failures. Pythia's short "
+            "The calibration endpoints were inspected only to detect gross failures. Pythia's "
+            "short "
             "calibration fit the controlled associations while catastrophically damaging held-out "
-            "utility; Mamba did not show the same gross collapse under this exploratory setup. These "
+            "utility; Mamba did not show the same gross collapse under this exploratory setup. "
+            "These "
             "observations motivate pre-confirmatory optimization calibration but are not method "
             "comparisons, architecture claims, or headline results. No calibration endpoint may be "
             "promoted into the confirmatory report.",
