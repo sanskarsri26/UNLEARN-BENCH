@@ -1,6 +1,6 @@
 import unittest
 
-from scripts.evaluate_stereoset_track_b import inserted_candidate, prepare_items
+from scripts.evaluate_stereoset_track_b import causal_prompt, inserted_candidate, prepare_items
 
 
 class TrackBTests(unittest.TestCase):
@@ -24,6 +24,21 @@ class TrackBTests(unittest.TestCase):
         self.assertEqual(
             set(items[0]["candidates"]), {"stereotype", "anti_stereotype", "unrelated"}
         )
+        empty = [
+            candidate
+            for item in items
+            for candidate in item["candidates"].values()
+            if not candidate["prompt"]
+        ]
+        self.assertEqual(len(empty), 57)
+
+    def test_empty_context_uses_pinned_special_token(self):
+        class Tokenizer:
+            bos_token = "<bos>"
+            eos_token = "<eos>"
+
+        self.assertEqual(causal_prompt(Tokenizer(), ""), "<bos>")
+        self.assertEqual(causal_prompt(Tokenizer(), "context"), "context")
 
 
 if __name__ == "__main__":

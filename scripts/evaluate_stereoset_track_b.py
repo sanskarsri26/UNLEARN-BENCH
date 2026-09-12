@@ -108,6 +108,15 @@ def prepare_items(limit: int | None = None) -> list[dict]:
     return items
 
 
+def causal_prompt(tokenizer, prompt: str) -> str:
+    if prompt:
+        return prompt
+    special = tokenizer.bos_token or tokenizer.eos_token
+    if special is None:
+        raise ValueError("Tokenizer needs a BOS or EOS token for an empty StereoSet context")
+    return special
+
+
 def score_items(model, tokenizer, items: list[dict], batch_size: int) -> list[dict]:
     flat = []
     for item in items:
@@ -118,7 +127,10 @@ def score_items(model, tokenizer, items: list[dict], batch_size: int) -> list[di
     with torch.inference_mode():
         for start in range(0, len(flat), batch_size):
             rows = flat[start : start + batch_size]
-            batch = causal_batch(tokenizer, rows, next(model.parameters()).device)
+            batch_rows = [
+                {**row, "prompt": causal_prompt(tokenizer, row["prompt"])} for row in rows
+            ]
+            batch = causal_batch(tokenizer, batch_rows, next(model.parameters()).device)
             token_logp, active = token_log_probabilities(model, batch)
             values = (token_logp * active).sum(dim=1) / active.sum(dim=1)
             scores.extend(float(value) for value in values)
@@ -234,6 +246,7 @@ def evaluate(
             "num_examples": len(items),
             "batch_size": batch_size,
             "score_definition": "mean continuation-token conditional log probability",
+            "empty_context_policy": "prepend pinned tokenizer BOS, falling back to EOS",
             "runtime_seconds": runtime,
             "peak_vram_bytes": memory["peak_device_memory_bytes"],
             "predictions_path": str(predictions_path.relative_to(ROOT)),
