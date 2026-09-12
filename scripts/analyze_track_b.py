@@ -156,6 +156,42 @@ def paired_deltas(cells: dict[tuple[str, str, int], dict]) -> list[dict]:
     return rows
 
 
+def paired_category_deltas(cells: dict[tuple[str, str, int], dict]) -> list[dict]:
+    rows = []
+    for model in MODELS:
+        for method in METHODS:
+            if method == "trained_full":
+                continue
+            for category in CATEGORIES:
+                seed_rows = []
+                for seed in SEEDS:
+                    current = cells[(model, method, seed)]["metrics"]["by_category"][category]
+                    baseline = cells[(model, "trained_full", seed)]["metrics"]["by_category"][
+                        category
+                    ]
+                    seed_rows.append(
+                        {
+                            "lms": current["lms"] - baseline["lms"],
+                            "ss": current["ss"] - baseline["ss"],
+                            "neutrality": abs(current["ss"] - 50.0)
+                            - abs(baseline["ss"] - 50.0),
+                            "icat": current["icat"] - baseline["icat"],
+                        }
+                    )
+                row = {
+                    "model": model,
+                    "method": method,
+                    "category": category,
+                    "baseline": "trained_full",
+                }
+                for metric in ("lms", "ss", "neutrality", "icat"):
+                    values = [item[metric] for item in seed_rows]
+                    row[f"{metric}_delta_mean"] = mean(values)
+                    row[f"{metric}_delta_sd"] = stdev(values)
+                rows.append(row)
+    return rows
+
+
 def write_csv(path: Path, rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
@@ -215,7 +251,7 @@ def write_figure(rows: list[dict]) -> None:
     plt.close(figure)
 
 
-def write_report(overall: list[dict], deltas: list[dict]) -> None:
+def write_report(overall: list[dict], deltas: list[dict], category_deltas: list[dict]) -> None:
     lines = [
         "# Track B: StereoSet external generalization",
         "",
@@ -255,6 +291,44 @@ def write_report(overall: list[dict], deltas: list[dict]) -> None:
             f"{row['ss_delta_mean']:.3f} | {row['neutrality_delta_mean']:.3f} | "
             f"{row['icat_delta_mean']:.3f} |"
         )
+    interventions = {
+        "continued_retain",
+        "sham",
+        "counterfactual",
+        "gradient_ascent",
+        "npo",
+        "pcgu",
+    }
+    lines.extend(
+        [
+            "",
+            "## Category heterogeneity",
+            "",
+            "The rows below are selected mechanically as the largest movement toward and away "
+            "from SS neutrality within each model. Exact retraining and untouched are excluded "
+            "from this intervention diagnostic.",
+            "",
+            "| Model | Direction | Method | Category | Δ|SS−50| | ΔLMS |",
+            "| --- | --- | --- | --- | ---: | ---: |",
+        ]
+    )
+    for model in MODELS:
+        candidates = [
+            row
+            for row in category_deltas
+            if row["model"] == model and row["method"] in interventions
+        ]
+        for direction, row in (
+            ("toward neutrality", min(candidates, key=lambda item: item["neutrality_delta_mean"])),
+            (
+                "away from neutrality",
+                max(candidates, key=lambda item: item["neutrality_delta_mean"]),
+            ),
+        ):
+            lines.append(
+                f"| {model} | {direction} | {row['method']} | {row['category']} | "
+                f"{row['neutrality_delta_mean']:.3f} | {row['lms_delta_mean']:.3f} |"
+            )
     lines.extend(
         [
             "",
@@ -274,11 +348,15 @@ def main() -> None:
     cells = validate_and_load()
     overall, categories = aggregate(cells)
     deltas = paired_deltas(cells)
+    category_deltas = paired_category_deltas(cells)
     write_csv(ROOT / "reports" / "tables" / "track_b_summary.csv", overall)
     write_csv(ROOT / "reports" / "tables" / "track_b_categories.csv", categories)
     write_csv(ROOT / "reports" / "tables" / "track_b_deltas.csv", deltas)
+    write_csv(
+        ROOT / "reports" / "tables" / "track_b_category_deltas.csv", category_deltas
+    )
     write_figure(overall)
-    write_report(overall, deltas)
+    write_report(overall, deltas, category_deltas)
     print("Validated and analyzed all 54 exploratory Track B cells")
 
 
