@@ -1,28 +1,34 @@
-# Compute budget (A100 calibrated; M3 pending)
+# Frozen confirmatory compute budget
 
-The canonical CPU fixture passed all nine configured methods on 2026-09-12 from commit `901cafb`.
-The attributed per-run times sum to 1.965 seconds; the full command, including creation of shared
-full-training and exact-retrain checkpoints, took 6.37 seconds. It evaluated 108 method/example
-pairs (a coarse 55.0 pairs/second over attributed run time), allocated 0 GPU bytes, and wrote nine
-14,697-byte checkpoints (132,273 bytes total). This validates plumbing only and is not a substitute
-for a Pythia/Mamba GPU estimate.
+The confirmatory small-tier matrix is 2 models × 9 methods × 3 seeds = 54 terminal cells. It uses
+FP32 on an NVIDIA A100 and is frozen in `docs/preregistration_main.md`. The prior 410M/370M candidate
+tier is deferred.
 
-Real-model A100 calibration was completed from commit `81beb6d` with FP32 Pythia-160M and
-Mamba-130M. The 18 model/method cells completed in 31 and 60 seconds of scheduler wall time,
-respectively (91 A100-seconds total). Peak PyTorch allocation was 7.32 GiB for Pythia and 10.24 GiB
-for Mamba. Mamba used an A100 20 GiB MIG device and the sequential eager implementation because its
-optional fused kernels were unavailable. See `reports/device_calibration.md` for per-method data.
+## Measured basis
 
-Provisional confirmatory matrix (costing only, not authorized for execution):
-
-| Tier | Models | Methods | Seeds | Runs |
+| Model | Exploratory nine-method job | Peak allocation | Checkpoint bytes | Write time |
 | --- | ---: | ---: | ---: | ---: |
-| Calibrated exploratory | 2 (Pythia-160M, Mamba-130M) | 9 | 1 | 18 |
-| Candidate main small tier | 2 (Pythia-160M, Mamba-130M) | 9 | 3 | 54 |
-| Deferred large tier | 2 (Pythia-410M, Mamba-370M) | 9 | 3 | 54 |
+| Pythia-160M | 30 s | 7.32 GiB | 649,350,482 | 0.596 s |
+| Mamba-130M-HF | 58 s | 10.57 GiB | 516,633,264 | 0.445 s |
 
-The small-tier candidate is comfortably below the 24 GPU-hour stop threshold based on the measured
-short-run throughput, but the estimate is not yet frozen: full-length optimizer behavior,
-real-checkpoint write time/storage, and a utility-preserving Pythia setup still need calibration.
-M3 MPS/CPU performance and thermal behavior are also unmeasured because the active environment is
-Linux/x86_64. Do not create `results/manifests/CALIBRATION_REVIEWED` yet. Main runs remain gated.
+The method-calibration jobs included 20-step full and exact training and the final intervention
+budgets. They completed all 18 cells without OOM or non-finite parameters. Mamba ran on an A100 20
+GiB MIG device using the sequential eager implementation. The observed 88 A100-seconds for one seed
+of both models scale to approximately 264 seconds for three seeds before additional checkpoint I/O.
+
+## Frozen authorization ceiling
+
+- Expected compute: under 0.10 A100 GPU-hours including measured checkpoint writes.
+- Authorized ceiling: 1.0 A100 GPU-hour, allowing scheduler and filesystem variance.
+- Stop threshold from the project protocol: 24 GPU-hours; the frozen ceiling is well below it.
+- Peak-memory request: 20 GiB A100 MIG or larger; calibrated maximum is 10.57 GiB.
+- Checkpoint storage: 31,481,561,142 bytes (31.48 GB, 29.32 GiB) for 54 checkpoint copies.
+
+Wall time is measured but is not the compute-matching variable. Approximate interventions are
+matched on 48 loss-contributing examples processed. Token counts, runtime, throughput, and peak
+memory remain reported compute outcomes.
+
+M3/MPS throughput and thermal behavior remain unmeasured because the available environment is
+Linux/x86_64. The confirmatory protocol therefore authorizes A100 only and makes no fabricated M3
+estimate. A valid `CALIBRATION_REVIEWED` marker tied to the preregistration commit is still required
+before execution.

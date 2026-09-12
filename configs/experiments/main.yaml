@@ -1,12 +1,14 @@
-name: controlled-main-pythia-v1
+name: controlled-main-pythia-160m-v2
 track: controlled_unlearning
 claim_status: confirmatory
-device: auto
+device: cuda
 precision: fp32
 allow_mps_fallback: false
 deterministic: true
-model: pythia_410m
-dataset: controlled_v1
+model: pythia_160m
+dataset: controlled_v2
+checkpoint_policy: saved
+preregistration_path: docs/preregistration_main.md
 methods:
   - untouched
   - trained_full
@@ -20,8 +22,16 @@ methods:
 seeds: [11, 29, 47]
 requires_calibration_approval: true
 training:
-  steps: 500
+  steps: 20
+  exact_steps: 20
+  batch_size: 4
   learning_rate: 0.00001
+method_overrides:
+  continued_retain: {steps: 12, batch_size: 4, learning_rate: 0.00001}
+  counterfactual: {steps: 12, batch_size: 4, learning_rate: 0.00001}
+  gradient_ascent: {steps: 4, learning_rate: 0.000001, retain_weight: 1.0}
+  npo: {steps: 4, learning_rate: 0.000001, beta: 0.1, retain_weight: 1.0}
+  pcgu: {steps: 6, learning_rate: 0.00001, selected_fraction: 0.1}
 primary_endpoints:
   forgetting: forget_oracle_kl
   utility: utility_nll

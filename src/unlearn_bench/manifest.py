@@ -38,6 +38,14 @@ DEVICE_RUN_FIELDS = {
     "trust_remote_code",
 }
 DETERMINISTIC_RUN_FIELDS = {"experiment_config_sha256"}
+CONFIRMATORY_RUN_FIELDS = {"claim_status", "preregistration_commit", "status"}
+FAILURE_STATUSES = {
+    "TECHNICAL_FAILURE",
+    "OOM",
+    "UNSUPPORTED_DEVICE",
+    "NUMERICAL_FAILURE",
+    "METHOD_FAILURE",
+}
 
 
 def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = None) -> None:
@@ -47,7 +55,9 @@ def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = No
     if manifest.get("schema_version", 1) >= 2:
         device_missing = DEVICE_RUN_FIELDS - set(manifest)
         if device_missing:
-            raise ValueError(f"Schema v2 manifest is missing device fields: {sorted(device_missing)}")
+            raise ValueError(
+                f"Schema v2 manifest is missing device fields: {sorted(device_missing)}"
+            )
         if manifest["device"] not in {"cuda", "mps", "cpu"}:
             raise ValueError("manifest device must be cuda, mps, or cpu")
         if manifest["dtype"] not in {"fp32", "fp16", "bf16"}:
@@ -59,6 +69,20 @@ def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = No
                 "Schema v3 manifest is missing deterministic fields: "
                 f"{sorted(deterministic_missing)}"
             )
+    if manifest.get("schema_version", 1) >= 4:
+        confirmatory_missing = CONFIRMATORY_RUN_FIELDS - set(manifest)
+        if confirmatory_missing:
+            raise ValueError(
+                "Schema v4 manifest is missing confirmatory fields: "
+                f"{sorted(confirmatory_missing)}"
+            )
+        if manifest["claim_status"] != "confirmatory":
+            raise ValueError("Schema v4 manifests must be confirmatory")
+        if manifest["status"] != "COMPLETED":
+            raise ValueError("Completed run manifests must have status COMPLETED")
+        commit = manifest["preregistration_commit"]
+        if not isinstance(commit, str) or len(commit) != 40:
+            raise ValueError("preregistration_commit must be a full Git SHA")
     if set(manifest["dataset_hashes"]) != {"train", "validation", "test"}:
         raise ValueError("dataset_hashes must contain train, validation, and test")
     if set(manifest["split_hashes"]) != {"retain", "forget", "utility"}:
@@ -76,3 +100,33 @@ def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = No
             path = (root / manifest[field]).resolve()
             if root not in path.parents or not path.is_file():
                 raise ValueError(f"Manifest artifact is missing or outside the repository: {field}")
+
+
+def validate_failure_record(record: dict[str, Any]) -> None:
+    required = {
+        "run_id",
+        "run_set_id",
+        "experiment_name",
+        "experiment_config_sha256",
+        "timestamp_utc",
+        "git_commit",
+        "preregistration_commit",
+        "claim_status",
+        "status",
+        "stage",
+        "model_name",
+        "method",
+        "random_seed",
+        "error_type",
+        "error_message",
+        "rerun_policy",
+    }
+    missing = required - set(record)
+    if missing:
+        raise ValueError(f"Failure record is missing fields: {sorted(missing)}")
+    if record["status"] not in FAILURE_STATUSES:
+        raise ValueError(f"Unknown failure status: {record['status']}")
+    if record["claim_status"] == "confirmatory":
+        commit = record["preregistration_commit"]
+        if not isinstance(commit, str) or len(commit) != 40:
+            raise ValueError("Confirmatory failure needs a full preregistration Git SHA")

@@ -28,7 +28,7 @@ def main() -> None:
         if value is not None
     }
     run_ids = run_experiment(ROOT / args.config, ROOT, overrides=overrides)
-    print("Completed runs:")
+    print("Terminal run cells (completed or explicitly failed):")
     for run_id in run_ids:
         print(run_id)
 

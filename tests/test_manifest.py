@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from unlearn_bench.manifest import validate_run_manifest
+from unlearn_bench.manifest import validate_failure_record, validate_run_manifest
 
 REQUIRED_V1_FIELDS = {
     "run_id",
@@ -87,3 +87,45 @@ class ManifestTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "deterministic fields"):
             validate_run_manifest(manifest)
+
+    def test_schema_v4_requires_preregistration(self):
+        manifest = {field: None for field in REQUIRED_V1_FIELDS}
+        manifest.update(
+            {
+                "schema_version": 4,
+                "attention_implementation": None,
+                "backend": "cpu",
+                "device": "cpu",
+                "device_fallback": {},
+                "dtype": "fp32",
+                "reproducibility": {},
+                "tokenizer_name": "tokenizer",
+                "trust_remote_code": False,
+                "experiment_config_sha256": "a" * 64,
+            }
+        )
+        with self.assertRaisesRegex(ValueError, "confirmatory fields"):
+            validate_run_manifest(manifest)
+
+    def test_failure_status_is_classified(self):
+        record = {
+            "run_id": "run",
+            "run_set_id": "set",
+            "experiment_name": "experiment",
+            "experiment_config_sha256": "a" * 64,
+            "timestamp_utc": "2026-09-11T12:00:00+00:00",
+            "git_commit": "a" * 40,
+            "preregistration_commit": "b" * 40,
+            "claim_status": "confirmatory",
+            "status": "OOM",
+            "stage": "intervention",
+            "model_name": "model",
+            "method": "method",
+            "random_seed": 11,
+            "error_type": "OutOfMemoryError",
+            "error_message": "out of memory",
+            "rerun_policy": "requires addendum",
+        }
+        validate_failure_record(record)
+        with self.assertRaisesRegex(ValueError, "Unknown failure status"):
+            validate_failure_record({**record, "status": "FAILED_MAYBE"})

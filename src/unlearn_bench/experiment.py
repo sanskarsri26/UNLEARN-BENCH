@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import platform
 import resource
 import socket
@@ -14,11 +15,12 @@ import torch
 from unlearn_bench.config import resolve_experiment
 from unlearn_bench.data import load_records, validate_dataset
 from unlearn_bench.evaluation import evaluate_causal_lm, evaluate_model, metrics_from_predictions
-from unlearn_bench.manifest import validate_run_manifest
+from unlearn_bench.manifest import validate_failure_record, validate_run_manifest
 from unlearn_bench.methods import apply_hf_method, apply_method, supervised_train, train_causal_lm
 from unlearn_bench.methods.hf import clone_causal_lm
 from unlearn_bench.methods.common import clone_model, trainable_parameter_count
 from unlearn_bench.models import TinyAssociationLM, build_vocabulary, causal_batch, load_causal_lm
+from unlearn_bench.preregistration import load_and_validate_marker
 from unlearn_bench.utils.device import memory_metrics, reset_peak_memory, select_device, synchronize
 from unlearn_bench.utils.reproducibility import (
     atomic_json,
@@ -88,6 +90,60 @@ def _run_id(experiment: str, model: str, method: str, seed: int, config_hash: st
     return f"{experiment}-{method}-s{seed}-{suffix}"
 
 
+def _failure_class(error: Exception) -> str:
+    if isinstance(error, torch.cuda.OutOfMemoryError):
+        return "OOM"
+    if isinstance(error, FloatingPointError):
+        return "NUMERICAL_FAILURE"
+    if isinstance(error, NotImplementedError):
+        return "UNSUPPORTED_DEVICE"
+    if isinstance(error, (RuntimeError, OSError)):
+        return "TECHNICAL_FAILURE"
+    return "METHOD_FAILURE"
+
+
+def _write_failure(
+    root: Path,
+    run_dir: Path,
+    *,
+    run_id: str,
+    run_set_id: str,
+    config: dict[str, Any],
+    model_name: str,
+    method: str,
+    seed: int,
+    config_hash: str,
+    preregistration_commit: str | None,
+    stage: str,
+    error: Exception,
+) -> None:
+    if (run_dir / "manifest.json").exists() or (run_dir / "failure.json").exists():
+        raise RuntimeError(f"Refusing to overwrite terminal run cell: {run_dir}")
+    run_dir.mkdir(parents=True, exist_ok=True)
+    atomic_json(
+        run_dir / "failure.json",
+        {
+            "schema_version": 1,
+            "run_id": run_id,
+            "run_set_id": run_set_id,
+            "experiment_name": config["name"],
+            "experiment_config_sha256": config_hash,
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "git_commit": git_commit(root),
+            "preregistration_commit": preregistration_commit,
+            "claim_status": config["claim_status"],
+            "status": _failure_class(error),
+            "stage": stage,
+            "model_name": model_name,
+            "method": method,
+            "random_seed": seed,
+            "error_type": type(error).__name__,
+            "error_message": str(error),
+            "rerun_policy": "requires documented protocol addendum; never overwrite this record",
+        },
+    )
+
+
 def run_experiment(
     config_path: str | Path,
     root: str | Path = ".",
@@ -96,21 +152,27 @@ def run_experiment(
 ) -> list[str]:
     root = Path(root).resolve()
     config = resolve_experiment(config_path)
+    if config["claim_status"] == "confirmatory":
+        changed = {
+            key: value
+            for key, value in (overrides or {}).items()
+            if value != config.get(key)
+        }
+        if changed:
+            raise RuntimeError(
+                f"Confirmatory command-line overrides would change the frozen protocol: {changed}"
+            )
     config.update(overrides or {})
+    config["config_path"] = str(Path(config_path).resolve().relative_to(root))
+    experiment_config_sha256 = sha256_value(config)
+    calibration_marker = None
+    if config.get("requires_calibration_approval", False):
+        calibration_marker = load_and_validate_marker(root, config["name"])
     context = select_device(
         config.get("device", "auto"),
         config.get("precision", "auto"),
         allow_mps_fallback=config.get("allow_mps_fallback", False),
     )
-    config["config_path"] = str(Path(config_path).resolve().relative_to(root))
-    experiment_config_sha256 = sha256_value(config)
-    if config.get("requires_calibration_approval", False):
-        marker = root / "results" / "manifests" / "CALIBRATION_REVIEWED"
-        if not marker.exists():
-            raise RuntimeError(
-                "Main experiments are gated. Review reports/compute_budget.md and create "
-                "results/manifests/CALIBRATION_REVIEWED with reviewer/date before running."
-            )
     dataset_dir = root / config["dataset_config"]["path"]
     validate_dataset(dataset_dir)
     records = {
@@ -133,10 +195,17 @@ def run_experiment(
             for method in config["methods"]
         ]
         expected_dirs = [root / "results" / "runs" / run_id for run_id in expected_ids]
-        if all((run_dir / "manifest.json").is_file() for run_dir in expected_dirs):
+        if all(
+            (run_dir / "manifest.json").is_file() or (run_dir / "failure.json").is_file()
+            for run_dir in expected_dirs
+        ):
             for run_dir in expected_dirs:
-                manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
-                validate_run_manifest(manifest, root)
+                if (run_dir / "manifest.json").is_file():
+                    manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+                    validate_run_manifest(manifest, root)
+                else:
+                    failure = json.loads((run_dir / "failure.json").read_text(encoding="utf-8"))
+                    validate_failure_record(failure)
             run_ids.extend(expected_ids)
             continue
         reproducibility = set_seed(seed, deterministic=config.get("deterministic", True))
@@ -227,45 +296,85 @@ def run_experiment(
                 )
                 run_ids.append(run_id)
                 continue
+            if (run_dir / "failure.json").is_file():
+                validate_failure_record(
+                    json.loads((run_dir / "failure.json").read_text(encoding="utf-8"))
+                )
+                run_ids.append(run_id)
+                continue
             if run_dir.exists():
                 raise RuntimeError(f"Incomplete existing run directory requires review: {run_dir}")
+
+            def record_failure(stage: str, error: Exception) -> None:
+                _write_failure(
+                    root,
+                    run_dir,
+                    run_id=run_id,
+                    run_set_id=run_set_id,
+                    config=config,
+                    model_name=model_config["name"],
+                    method=method,
+                    seed=seed,
+                    config_hash=experiment_config_sha256,
+                    preregistration_commit=(
+                        calibration_marker["preregistration_commit"]
+                        if calibration_marker
+                        else None
+                    ),
+                    stage=stage,
+                    error=error,
+                )
+
             reset_peak_memory(context)
             synchronize(context)
             intervention_started = time.perf_counter()
             method_config = dict(config["method_configs"][method])
             method_config.update(config.get("method_overrides", {}).get(method, {}))
-            if backend == "tiny_association":
-                model, method_metadata = apply_method(
-                    method,
-                    full,
-                    base,
-                    exact,
-                    vocabulary,
-                    records["train"],
-                    method_config,
-                    seed,
-                )
-            else:
-                model, method_metadata = apply_hf_method(
-                    method,
-                    full,
-                    base,
-                    exact,
-                    tokenizer,
-                    records["train"],
-                    method_config,
-                    seed,
-                )
-            synchronize(context)
-            intervention_runtime = time.perf_counter() - intervention_started
-            evaluation_started = time.perf_counter()
-            if backend == "tiny_association":
-                predictions = evaluate_model(model, exact, vocabulary, records["test"])
-            else:
-                predictions = evaluate_causal_lm(model, exact, tokenizer, records["test"])
-            synchronize(context)
-            evaluation_runtime = time.perf_counter() - evaluation_started
-            metrics = metrics_from_predictions(predictions)
+            stage = "intervention"
+            try:
+                if backend == "tiny_association":
+                    model, method_metadata = apply_method(
+                        method,
+                        full,
+                        base,
+                        exact,
+                        vocabulary,
+                        records["train"],
+                        method_config,
+                        seed,
+                    )
+                else:
+                    model, method_metadata = apply_hf_method(
+                        method,
+                        full,
+                        base,
+                        exact,
+                        tokenizer,
+                        records["train"],
+                        method_config,
+                        seed,
+                    )
+                synchronize(context)
+                intervention_runtime = time.perf_counter() - intervention_started
+                stage = "evaluation"
+                evaluation_started = time.perf_counter()
+                if backend == "tiny_association":
+                    predictions = evaluate_model(model, exact, vocabulary, records["test"])
+                else:
+                    predictions = evaluate_causal_lm(model, exact, tokenizer, records["test"])
+                synchronize(context)
+                evaluation_runtime = time.perf_counter() - evaluation_started
+                metrics = metrics_from_predictions(predictions)
+                numeric_metrics = [
+                    value for value in metrics.values() if isinstance(value, (int, float))
+                ]
+                if not numeric_metrics or not all(
+                    math.isfinite(value) for value in numeric_metrics
+                ):
+                    raise FloatingPointError(f"Method {method} produced non-finite metrics")
+            except Exception as error:
+                record_failure(stage, error)
+                raise
             setup_runtime = {
                 "trained_full": full_training_runtime,
                 "exact_retrain": exact_training_runtime,
@@ -280,31 +389,39 @@ def run_experiment(
             run_dir.mkdir(parents=True, exist_ok=False)
             checkpoint_policy = config.get("checkpoint_policy", "saved")
             checkpoint_started = time.perf_counter()
-            if checkpoint_policy == "saved":
-                checkpoint = run_dir / "checkpoint.pt"
-                torch.save(
-                    {
-                        "state_dict": model.state_dict(),
-                        "vocabulary": vocabulary.tokens if vocabulary is not None else None,
-                        "model": model_config,
-                    },
-                    checkpoint,
-                )
-            elif checkpoint_policy == "metadata_only" and "calibration" in config["name"]:
-                checkpoint = run_dir / "checkpoint-metadata.json"
-                atomic_json(
-                    checkpoint,
-                    {"status": "intentionally_omitted", "reason": "exploratory calibration"},
-                )
-            else:
-                raise ValueError(
-                    "checkpoint_policy must be saved, or metadata_only for a calibration run"
-                )
+            try:
+                if checkpoint_policy == "saved":
+                    checkpoint = run_dir / "checkpoint.pt"
+                    torch.save(
+                        {
+                            "state_dict": model.state_dict(),
+                            "vocabulary": vocabulary.tokens if vocabulary is not None else None,
+                            "model": model_config,
+                        },
+                        checkpoint,
+                    )
+                elif checkpoint_policy == "metadata_only" and "calibration" in config["name"]:
+                    checkpoint = run_dir / "checkpoint-metadata.json"
+                    atomic_json(
+                        checkpoint,
+                        {"status": "intentionally_omitted", "reason": "exploratory calibration"},
+                    )
+                else:
+                    raise ValueError(
+                        "checkpoint_policy must be saved, or metadata_only for a calibration run"
+                    )
+            except Exception as error:
+                record_failure("checkpoint_write", error)
+                raise
             checkpoint_write_seconds = time.perf_counter() - checkpoint_started
             predictions_path = run_dir / "predictions.jsonl"
             metrics_path = run_dir / "metrics.json"
-            write_jsonl(predictions_path, predictions)
-            atomic_json(metrics_path, metrics)
+            try:
+                write_jsonl(predictions_path, predictions)
+                atomic_json(metrics_path, metrics)
+            except Exception as error:
+                record_failure("result_write", error)
+                raise
             measured_memory = memory_metrics(context)
             work_examples = setup_metadata["examples_processed"] + method_metadata.get(
                 "examples_processed", 0
@@ -317,7 +434,7 @@ def run_experiment(
                 else None
             )
             manifest = {
-                "schema_version": 3,
+                "schema_version": 4 if config["claim_status"] == "confirmatory" else 3,
                 "run_id": run_id,
                 "run_set_id": run_set_id,
                 "experiment_name": config["name"],
@@ -326,6 +443,10 @@ def run_experiment(
                 "git_commit": git_commit(root),
                 "track": config["track"],
                 "claim_status": config["claim_status"],
+                "status": "COMPLETED",
+                "preregistration_commit": (
+                    calibration_marker["preregistration_commit"] if calibration_marker else None
+                ),
                 "model_name": model_config["name"],
                 "model_repository": model_config.get("repository"),
                 "model_revision": model_config["revision"],
@@ -402,8 +523,12 @@ def run_experiment(
                 "metrics_path": str(metrics_path.relative_to(root)),
                 "method_metadata": method_metadata,
             }
-            validate_run_manifest(manifest, root)
-            atomic_json(run_dir / "manifest.json", manifest)
+            try:
+                validate_run_manifest(manifest, root)
+                atomic_json(run_dir / "manifest.json", manifest)
+            except Exception as error:
+                record_failure("manifest_write", error)
+                raise
             run_ids.append(run_id)
     return run_ids
 

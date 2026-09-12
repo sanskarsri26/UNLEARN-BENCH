@@ -49,6 +49,11 @@ def validate_experiment(config: dict[str, Any]) -> None:
         raise ValueError("checkpoint_policy must be saved or metadata_only")
     if config.get("checkpoint_policy") == "metadata_only" and "calibration" not in config["name"]:
         raise ValueError("metadata_only checkpoints are restricted to calibration runs")
+    if config["claim_status"] == "confirmatory":
+        if not config.get("requires_calibration_approval", False):
+            raise ValueError("confirmatory experiments require calibration approval")
+        if config.get("preregistration_path") != "docs/preregistration_main.md":
+            raise ValueError("confirmatory experiments require the frozen preregistration path")
 
 
 def resolve_experiment(path: str | Path) -> dict[str, Any]:
