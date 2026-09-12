@@ -1,0 +1,289 @@
+{
+  "checkpoint_probe": {
+    "bytes": 649350482,
+    "seconds": 0.5955704096704721
+  },
+  "claim_status": "exploratory_calibration",
+  "configuration": {
+    "batch_size": 4,
+    "device": "cuda",
+    "model": "pythia_160m",
+    "name": "training-calibration-pythia-160m-v1",
+    "precision": "fp32",
+    "seed": 11,
+    "variants": [
+      {
+        "learning_rate": 1e-06,
+        "name": "lr1e-6-s20",
+        "steps": 20
+      },
+      {
+        "learning_rate": 3e-06,
+        "name": "lr3e-6-s20",
+        "steps": 20
+      },
+      {
+        "learning_rate": 1e-05,
+        "name": "lr1e-5-s20",
+        "steps": 20
+      },
+      {
+        "learning_rate": 3e-06,
+        "name": "lr3e-6-s50",
+        "steps": 50
+      }
+    ]
+  },
+  "configuration_sha256": "9943e0e3e58f74b5c930056b2d015ff34f3a7e96626bf80c0d74a73eb31e6303",
+  "device": {
+    "backend": "cuda",
+    "device": "cuda",
+    "mps_fallback_enabled": false,
+    "precision": "fp32",
+    "requested_device": "cuda",
+    "requested_precision": "fp32"
+  },
+  "git_commit": "90238643fdd2b6499324347ed5ee2138f5cac8be",
+  "hardware": {
+    "device_memory_bytes": 20937965568,
+    "gpu": "NVIDIA A100-SXM4-80GB MIG 1g.20gb",
+    "platform": "Linux-4.18.0-553.124.1.el8_10.x86_64-x86_64-with-glibc2.28"
+  },
+  "load_seconds": 6.156784439459443,
+  "model": {
+    "attention_implementation": "eager",
+    "backend": "huggingface_causal_lm",
+    "family": "transformer",
+    "model_class": "AutoModelForCausalLM",
+    "name": "pythia-160m",
+    "repository": "EleutherAI/pythia-160m",
+    "revision": "50f5173",
+    "tokenizer_repository": "EleutherAI/pythia-160m",
+    "tokenizer_revision": "50f5173",
+    "trust_remote_code": false
+  },
+  "schema_version": 1,
+  "timestamp_utc": "2026-09-12T03:26:18.439686+00:00",
+  "variants": [
+    {
+      "exact_training_seconds": 1.5989107489585876,
+      "exact_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 12,
+        "steps": 20,
+        "tokens_processed": 90
+      },
+      "full_training_seconds": 1.7827407382428646,
+      "full_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 11,
+        "steps": 20,
+        "tokens_processed": 100
+      },
+      "learning_rate": 1e-06,
+      "memory": {
+        "device_memory_allocated_bytes": 3313569280,
+        "peak_device_memory_bytes": 5261446144
+      },
+      "metrics": {
+        "test": {
+          "forget_log_probability_margin": -4.107795715332031,
+          "forget_nll": 7.119422674179077,
+          "forget_oracle_kl": 0.30103752040304244,
+          "forget_target_probability": 0.004346519593127596,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.0,
+          "retain_nll": 9.055842558542887,
+          "utility_accuracy": 0.0,
+          "utility_nll": 3.539947986602783,
+          "utility_perplexity": 34.465126495921155
+        },
+        "validation": {
+          "forget_log_probability_margin": -6.3468093276023865,
+          "forget_nll": 8.261334419250488,
+          "forget_oracle_kl": 0.12389742163941264,
+          "forget_target_probability": 0.0039882870032670326,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.0,
+          "retain_nll": 8.946914911270142,
+          "utility_accuracy": 0.0,
+          "utility_nll": 4.8299760818481445,
+          "utility_perplexity": 125.20796587580922
+        }
+      },
+      "name": "lr1e-6-s20",
+      "steps": 20
+    },
+    {
+      "exact_training_seconds": 1.6042946372181177,
+      "exact_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 12,
+        "steps": 20,
+        "tokens_processed": 90
+      },
+      "full_training_seconds": 1.6086572092026472,
+      "full_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 11,
+        "steps": 20,
+        "tokens_processed": 100
+      },
+      "learning_rate": 3e-06,
+      "memory": {
+        "device_memory_allocated_bytes": 3313569280,
+        "peak_device_memory_bytes": 5261446144
+      },
+      "metrics": {
+        "test": {
+          "forget_log_probability_margin": -0.22686004638671875,
+          "forget_nll": 4.155472993850708,
+          "forget_oracle_kl": 0.901763467118144,
+          "forget_target_probability": 0.0276483446941711,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.0,
+          "retain_nll": 5.160599589347839,
+          "utility_accuracy": 0.5,
+          "utility_nll": 2.6059526205062866,
+          "utility_perplexity": 13.5441215670939
+        },
+        "validation": {
+          "forget_log_probability_margin": -2.580734223127365,
+          "forget_nll": 4.9585360288619995,
+          "forget_oracle_kl": 0.7621685080230236,
+          "forget_target_probability": 0.02450716849125456,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.0,
+          "retain_nll": 5.387633760770162,
+          "utility_accuracy": 0.0,
+          "utility_nll": 4.2065699100494385,
+          "utility_perplexity": 67.12589660940809
+        }
+      },
+      "name": "lr3e-6-s20",
+      "steps": 20
+    },
+    {
+      "exact_training_seconds": 1.6047152802348137,
+      "exact_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 12,
+        "steps": 20,
+        "tokens_processed": 90
+      },
+      "full_training_seconds": 1.6095333583652973,
+      "full_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 11,
+        "steps": 20,
+        "tokens_processed": 100
+      },
+      "learning_rate": 1e-05,
+      "memory": {
+        "device_memory_allocated_bytes": 3313569280,
+        "peak_device_memory_bytes": 5261446144
+      },
+      "metrics": {
+        "test": {
+          "forget_log_probability_margin": 3.0111846923828125,
+          "forget_nll": 1.0267709270119667,
+          "forget_oracle_kl": 3.3705513179302216,
+          "forget_target_probability": 0.4370778277516365,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 1.0,
+          "retain_nll": 0.8791883823772272,
+          "utility_accuracy": 0.0,
+          "utility_nll": 2.5520342588424683,
+          "utility_perplexity": 12.833183263993547
+        },
+        "validation": {
+          "forget_log_probability_margin": 1.1106948852539062,
+          "forget_nll": 1.8895262777805328,
+          "forget_oracle_kl": 4.460579991340637,
+          "forget_target_probability": 0.2553612133488059,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.3333333333333333,
+          "retain_nll": 1.9566774441239734,
+          "utility_accuracy": 0.0,
+          "utility_nll": 3.7464276552200317,
+          "utility_perplexity": 42.369453031471394
+        }
+      },
+      "name": "lr1e-5-s20",
+      "steps": 20
+    },
+    {
+      "exact_training_seconds": 3.9892930407077074,
+      "exact_work": {
+        "batch_size": 4,
+        "examples_processed": 200,
+        "seed": 12,
+        "steps": 50,
+        "tokens_processed": 225
+      },
+      "full_training_seconds": 4.004433983936906,
+      "full_work": {
+        "batch_size": 4,
+        "examples_processed": 200,
+        "seed": 11,
+        "steps": 50,
+        "tokens_processed": 251
+      },
+      "learning_rate": 3e-06,
+      "memory": {
+        "device_memory_allocated_bytes": 3313569280,
+        "peak_device_memory_bytes": 5261446144
+      },
+      "metrics": {
+        "test": {
+          "forget_log_probability_margin": 2.3044815063476562,
+          "forget_nll": 1.5564676076173782,
+          "forget_oracle_kl": 1.430521160364151,
+          "forget_target_probability": 0.2394518330693245,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.5,
+          "retain_nll": 2.3096767564614615,
+          "utility_accuracy": 0.5,
+          "utility_nll": 2.42375385761261,
+          "utility_perplexity": 11.28815400393549
+        },
+        "validation": {
+          "forget_log_probability_margin": -0.66815185546875,
+          "forget_nll": 3.0715934932231903,
+          "forget_oracle_kl": 1.6210300624370575,
+          "forget_target_probability": 0.12527818279340863,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.16666666666666666,
+          "retain_nll": 3.5225505183140435,
+          "utility_accuracy": 0.0,
+          "utility_nll": 3.740805149078369,
+          "utility_perplexity": 42.13189897196996
+        }
+      },
+      "name": "lr3e-6-s50",
+      "steps": 50
+    }
+  ]
+}

@@ -81,14 +81,19 @@ def npo(
 
 def sham_update(model: TinyAssociationLM, *, scale: float, seed: int) -> None:
     generator = torch.Generator(device="cpu").manual_seed(seed + 9109)
+    noises = []
+    parameters = []
     with torch.no_grad():
         for parameter in model.parameters():
             if not parameter.requires_grad:
                 continue
             noise = torch.randn(parameter.shape, generator=generator, dtype=parameter.dtype)
-            noise = noise.to(parameter.device)
-            norm = noise.norm().clamp_min(1e-12)
-            parameter.add_(noise, alpha=scale / norm.item())
+            noises.append(noise.to(parameter.device))
+            parameters.append(parameter)
+        global_norm = torch.sqrt(sum(torch.sum(noise.float() ** 2) for noise in noises))
+        multiplier = scale / global_norm.clamp_min(1e-12).item()
+        for parameter, noise in zip(parameters, noises, strict=True):
+            parameter.add_(noise, alpha=multiplier)
 
 
 def apply_method(

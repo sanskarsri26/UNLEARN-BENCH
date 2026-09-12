@@ -76,8 +76,14 @@ def _peak_process_memory_bytes() -> int:
     return int(maximum_rss if platform.system() == "Darwin" else maximum_rss * 1024)
 
 
-def _run_id(experiment: str, method: str, seed: int, timestamp: str) -> str:
-    identity = {"experiment": experiment, "method": method, "seed": seed, "at": timestamp}
+def _run_id(experiment: str, model: str, method: str, seed: int, config_hash: str) -> str:
+    identity = {
+        "experiment": experiment,
+        "model": model,
+        "method": method,
+        "seed": seed,
+        "config_hash": config_hash,
+    }
     suffix = sha256_value(identity)[:8]
     return f"{experiment}-{method}-s{seed}-{suffix}"
 
@@ -97,6 +103,7 @@ def run_experiment(
         allow_mps_fallback=config.get("allow_mps_fallback", False),
     )
     config["config_path"] = str(Path(config_path).resolve().relative_to(root))
+    experiment_config_sha256 = sha256_value(config)
     if config.get("requires_calibration_approval", False):
         marker = root / "results" / "manifests" / "CALIBRATION_REVIEWED"
         if not marker.exists():
@@ -118,10 +125,20 @@ def run_experiment(
     preprocessing_started = time.perf_counter()
     vocabulary = build_vocabulary(all_records) if backend == "tiny_association" else None
     shared_preprocessing_seconds = time.perf_counter() - preprocessing_started
-    invocation_timestamp = datetime.now(timezone.utc).isoformat()
-    run_set_id = f"{config['name']}-{sha256_value(invocation_timestamp)[:8]}"
+    run_set_id = f"{config['name']}-{experiment_config_sha256[:8]}"
     run_ids = []
     for seed in config["seeds"]:
+        expected_ids = [
+            _run_id(config["name"], model_config["name"], method, seed, experiment_config_sha256)
+            for method in config["methods"]
+        ]
+        expected_dirs = [root / "results" / "runs" / run_id for run_id in expected_ids]
+        if all((run_dir / "manifest.json").is_file() for run_dir in expected_dirs):
+            for run_dir in expected_dirs:
+                manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+                validate_run_manifest(manifest, root)
+            run_ids.extend(expected_ids)
+            continue
         reproducibility = set_seed(seed, deterministic=config.get("deterministic", True))
         load_started = time.perf_counter()
         if backend == "tiny_association":
@@ -200,6 +217,18 @@ def run_experiment(
         synchronize(context)
         exact_training_runtime = time.perf_counter() - exact_started
         for method in config["methods"]:
+            run_id = _run_id(
+                config["name"], model_config["name"], method, seed, experiment_config_sha256
+            )
+            run_dir = root / "results" / "runs" / run_id
+            if (run_dir / "manifest.json").is_file():
+                validate_run_manifest(
+                    json.loads((run_dir / "manifest.json").read_text(encoding="utf-8")), root
+                )
+                run_ids.append(run_id)
+                continue
+            if run_dir.exists():
+                raise RuntimeError(f"Incomplete existing run directory requires review: {run_dir}")
             reset_peak_memory(context)
             synchronize(context)
             intervention_started = time.perf_counter()
@@ -248,8 +277,6 @@ def run_experiment(
             optimization_seconds = intervention_runtime + setup_runtime
             runtime = optimization_seconds + evaluation_runtime
             timestamp = datetime.now(timezone.utc).isoformat()
-            run_id = _run_id(config["name"], method, seed, timestamp)
-            run_dir = root / "results" / "runs" / run_id
             run_dir.mkdir(parents=True, exist_ok=False)
             checkpoint_policy = config.get("checkpoint_policy", "saved")
             checkpoint_started = time.perf_counter()
@@ -290,10 +317,11 @@ def run_experiment(
                 else None
             )
             manifest = {
-                "schema_version": 2,
+                "schema_version": 3,
                 "run_id": run_id,
                 "run_set_id": run_set_id,
                 "experiment_name": config["name"],
+                "experiment_config_sha256": experiment_config_sha256,
                 "timestamp_utc": timestamp,
                 "git_commit": git_commit(root),
                 "track": config["track"],

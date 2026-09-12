@@ -37,6 +37,7 @@ DEVICE_RUN_FIELDS = {
     "tokenizer_name",
     "trust_remote_code",
 }
+DETERMINISTIC_RUN_FIELDS = {"experiment_config_sha256"}
 
 
 def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = None) -> None:
@@ -51,6 +52,13 @@ def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = No
             raise ValueError("manifest device must be cuda, mps, or cpu")
         if manifest["dtype"] not in {"fp32", "fp16", "bf16"}:
             raise ValueError("manifest dtype must be fp32, fp16, or bf16")
+    if manifest.get("schema_version", 1) >= 3:
+        deterministic_missing = DETERMINISTIC_RUN_FIELDS - set(manifest)
+        if deterministic_missing:
+            raise ValueError(
+                "Schema v3 manifest is missing deterministic fields: "
+                f"{sorted(deterministic_missing)}"
+            )
     if set(manifest["dataset_hashes"]) != {"train", "validation", "test"}:
         raise ValueError("dataset_hashes must contain train, validation, and test")
     if set(manifest["split_hashes"]) != {"retain", "forget", "utility"}:

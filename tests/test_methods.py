@@ -53,9 +53,12 @@ class MethodTests(unittest.TestCase):
         sham_update(first, scale=0.1, seed=7)
         sham_update(second, scale=0.1, seed=7)
         parameters = zip(first.parameters(), second.parameters(), initial.parameters(), strict=True)
+        squared_distance = 0.0
         for left, right, old in parameters:
             self.assertTrue(torch.equal(left, right))
             self.assertFalse(torch.equal(left, old))
+            squared_distance += torch.sum((left - old) ** 2).item()
+        self.assertAlmostEqual(squared_distance**0.5, 0.1, places=6)
 
 
 if __name__ == "__main__":

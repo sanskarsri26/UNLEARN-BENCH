@@ -55,3 +55,11 @@
     full-length scaling, M3 behavior, and large-tier feasibility.
 15. **Next phase:** run bounded optimization/checkpoint calibration, decide small versus large tier,
     then preregister without inspecting any confirmatory results.
+
+## Post-calibration integrity addendum
+
+Seeded optimization calibration measured real checkpoint writes of 0.596 seconds / 649,350,482
+bytes for Pythia-160M and 0.445 seconds / 516,633,264 bytes for Mamba-130M. During review, the
+existing v1 test split was found to have been repeatedly inspected during exploratory smoke and
+calibration, including an adaptive response to Pythia utility collapse. Confirmatory execution is
+therefore stopped pending the resolution in `reports/data_integrity_stop.md`.

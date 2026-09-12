@@ -69,3 +69,21 @@ class ManifestTests(unittest.TestCase):
         manifest["schema_version"] = 2
         with self.assertRaisesRegex(ValueError, "device fields"):
             validate_run_manifest(manifest)
+
+    def test_schema_v3_requires_config_hash(self):
+        manifest = {field: None for field in REQUIRED_V1_FIELDS}
+        manifest.update(
+            {
+                "schema_version": 3,
+                "attention_implementation": None,
+                "backend": "cpu",
+                "device": "cpu",
+                "device_fallback": {},
+                "dtype": "fp32",
+                "reproducibility": {},
+                "tokenizer_name": "tokenizer",
+                "trust_remote_code": False,
+            }
+        )
+        with self.assertRaisesRegex(ValueError, "deterministic fields"):
+            validate_run_manifest(manifest)

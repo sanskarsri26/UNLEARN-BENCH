@@ -1,0 +1,171 @@
+The fast path is not available because one of `(selective_state_update, selective_scan_fn, causal_conv1d_fn, causal_conv1d_update, mamba_inner_fn)` is None. Falling back to the sequential implementation of Mamba, as use_mambapy is set to False. To install follow https://github.com/state-spaces/mamba/#installation and https://github.com/Dao-AILab/causal-conv1d. For the mamba.py backend, follow https://github.com/alxndrTL/mamba.py.
+{
+  "checkpoint_probe": {
+    "bytes": 516633264,
+    "seconds": 0.4450942575931549
+  },
+  "claim_status": "exploratory_calibration",
+  "configuration": {
+    "batch_size": 4,
+    "device": "cuda",
+    "model": "mamba_130m",
+    "name": "training-calibration-mamba-130m-v1",
+    "precision": "fp32",
+    "seed": 11,
+    "variants": [
+      {
+        "learning_rate": 1e-05,
+        "name": "lr1e-5-s20",
+        "steps": 20
+      },
+      {
+        "learning_rate": 5e-05,
+        "name": "lr5e-5-s20",
+        "steps": 20
+      }
+    ]
+  },
+  "configuration_sha256": "5ff299404cc3bbdcc8ca2a5043da4d53847bd0a638278b8af68f7742a1c4d4ca",
+  "device": {
+    "backend": "cuda",
+    "device": "cuda",
+    "mps_fallback_enabled": false,
+    "precision": "fp32",
+    "requested_device": "cuda",
+    "requested_precision": "fp32"
+  },
+  "git_commit": "90238643fdd2b6499324347ed5ee2138f5cac8be",
+  "hardware": {
+    "device_memory_bytes": 20937965568,
+    "gpu": "NVIDIA A100-SXM4-80GB MIG 2g.20gb",
+    "platform": "Linux-4.18.0-553.124.1.el8_10.x86_64-x86_64-with-glibc2.28"
+  },
+  "load_seconds": 5.28850119933486,
+  "model": {
+    "attention_implementation": null,
+    "backend": "huggingface_causal_lm",
+    "family": "state_space",
+    "model_class": "AutoModelForCausalLM",
+    "name": "mamba-130m-hf",
+    "repository": "state-spaces/mamba-130m-hf",
+    "revision": "1e76775",
+    "tokenizer_repository": "state-spaces/mamba-130m-hf",
+    "tokenizer_revision": "1e76775",
+    "trust_remote_code": false
+  },
+  "schema_version": 1,
+  "timestamp_utc": "2026-09-12T03:26:17.406264+00:00",
+  "variants": [
+    {
+      "exact_training_seconds": 5.522025384008884,
+      "exact_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 12,
+        "steps": 20,
+        "tokens_processed": 90
+      },
+      "full_training_seconds": 5.943350179120898,
+      "full_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 11,
+        "steps": 20,
+        "tokens_processed": 100
+      },
+      "learning_rate": 1e-05,
+      "memory": {
+        "device_memory_allocated_bytes": 2649816064,
+        "peak_device_memory_bytes": 4199441920
+      },
+      "metrics": {
+        "test": {
+          "forget_log_probability_margin": -1.2566462457180023,
+          "forget_nll": 5.436585962772369,
+          "forget_oracle_kl": 0.18150426167994738,
+          "forget_target_probability": 0.016240322504017968,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.0,
+          "retain_nll": 6.786634524663289,
+          "utility_accuracy": 0.5,
+          "utility_nll": 1.931484580039978,
+          "utility_perplexity": 6.899745866893762
+        },
+        "validation": {
+          "forget_log_probability_margin": -5.650044798851013,
+          "forget_nll": 7.667633414268494,
+          "forget_oracle_kl": 0.2964411713182926,
+          "forget_target_probability": 0.0022101008353274665,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.0,
+          "retain_nll": 10.913902441660563,
+          "utility_accuracy": 0.0,
+          "utility_nll": 4.075976848602295,
+          "utility_perplexity": 58.907996685740535
+        }
+      },
+      "name": "lr1e-5-s20",
+      "steps": 20
+    },
+    {
+      "exact_training_seconds": 5.511443119496107,
+      "exact_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 12,
+        "steps": 20,
+        "tokens_processed": 90
+      },
+      "full_training_seconds": 5.770896021276712,
+      "full_work": {
+        "batch_size": 4,
+        "examples_processed": 80,
+        "seed": 11,
+        "steps": 20,
+        "tokens_processed": 100
+      },
+      "learning_rate": 5e-05,
+      "memory": {
+        "device_memory_allocated_bytes": 4715981824,
+        "peak_device_memory_bytes": 6265607680
+      },
+      "metrics": {
+        "test": {
+          "forget_log_probability_margin": 4.600014805793762,
+          "forget_nll": 0.2888646451756358,
+          "forget_oracle_kl": 2.6519497632980347,
+          "forget_target_probability": 0.7780468687415123,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 1.0,
+          "retain_nll": 0.34131617347399396,
+          "utility_accuracy": 1.0,
+          "utility_nll": 1.3464760780334473,
+          "utility_perplexity": 3.8438561868315055
+        },
+        "validation": {
+          "forget_log_probability_margin": -0.5636546909809113,
+          "forget_nll": 2.9725555777549744,
+          "forget_oracle_kl": 2.0210394859313965,
+          "forget_target_probability": 0.06195530202239752,
+          "num_examples": 12,
+          "primary_forgetting_metric": "forget_oracle_kl",
+          "primary_utility_metric": "utility_nll",
+          "retain_accuracy": 0.16666666666666666,
+          "retain_nll": 4.9681364099184675,
+          "utility_accuracy": 0.0,
+          "utility_nll": 3.214948058128357,
+          "utility_perplexity": 24.901998421166837
+        }
+      },
+      "name": "lr5e-5-s20",
+      "steps": 20
+    }
+  ]
+}
+Wrote /scratch/ssriva94/UNLEARN-BENCH/results/calibration/training-calibration-mamba-130m-v1-9023864.json
