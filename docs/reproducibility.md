@@ -6,7 +6,7 @@ optional Hugging Face/figure/dev dependencies are in `pyproject.toml`.
 ```bash
 pip install -e '.[dev,figures]'
 python scripts/prepare_data.py
-python scripts/run_experiment.py --config configs/experiments/smoke.yaml
+python scripts/run_experiment.py --config configs/experiments/smoke.yaml --device cpu --precision fp32
 python scripts/evaluate.py --run RUN_ID
 python scripts/aggregate_results.py
 python scripts/make_figures.py
@@ -20,3 +20,7 @@ divergence. Summary tables and figures read these artifacts rather than hard-cod
 
 The main and ablation configurations are guarded by a calibration-review marker. Do not create that
 marker until the measured compute budget has been reviewed.
+
+Device selection is explicit and auditable; see [device portability](device_portability.md). An
+unavailable explicit device is an error. MPS CPU fallback is disabled unless both the environment
+and resolved experiment configuration explicitly enable it.

@@ -62,7 +62,10 @@ def npo(
 ) -> None:
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
     prompts = [vocabulary.encode_prompt(row["prompt"]) for row in forget]
-    targets = torch.tensor([vocabulary.encode_completion(row["completion"]) for row in forget])
+    targets = torch.tensor(
+        [vocabulary.encode_completion(row["completion"]) for row in forget],
+        device=next(model.parameters()).device,
+    )
     with torch.no_grad():
         reference_logp = (
             F.log_softmax(reference(prompts), dim=-1).gather(1, targets[:, None]).squeeze(1)

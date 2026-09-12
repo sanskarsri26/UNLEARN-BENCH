@@ -27,11 +27,21 @@ REQUIRED_RUN_FIELDS = {
     "metrics_path",
 }
 
+DEVICE_RUN_FIELDS = {"device", "dtype", "backend", "reproducibility", "device_fallback"}
+
 
 def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = None) -> None:
     missing = REQUIRED_RUN_FIELDS - set(manifest)
     if missing:
         raise ValueError(f"Run manifest is missing fields: {sorted(missing)}")
+    if manifest.get("schema_version", 1) >= 2:
+        device_missing = DEVICE_RUN_FIELDS - set(manifest)
+        if device_missing:
+            raise ValueError(f"Schema v2 manifest is missing device fields: {sorted(device_missing)}")
+        if manifest["device"] not in {"cuda", "mps", "cpu"}:
+            raise ValueError("manifest device must be cuda, mps, or cpu")
+        if manifest["dtype"] not in {"fp32", "fp16", "bf16"}:
+            raise ValueError("manifest dtype must be fp32, fp16, or bf16")
     if set(manifest["dataset_hashes"]) != {"train", "validation", "test"}:
         raise ValueError("dataset_hashes must contain train, validation, and test")
     if set(manifest["split_hashes"]) != {"retain", "forget", "utility"}:

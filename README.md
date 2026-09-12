@@ -89,6 +89,10 @@ the git commit, exact configuration, revisions, seeds, hashes, software, hardwar
 artifact paths. See [reproducibility](docs/reproducibility.md) and
 [methodology](docs/methodology.md).
 
+Execution supports explicit `auto`, `cuda`, `mps`, and `cpu` device selection with recorded dtype
+and fallback state. See [device portability](docs/device_portability.md); real-model M3 and A100
+compatibility remains unverified until hardware calibration is completed.
+
 ## Repository Structure
 
 ```text

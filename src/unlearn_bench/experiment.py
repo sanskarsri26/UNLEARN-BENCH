@@ -17,6 +17,7 @@ from unlearn_bench.manifest import validate_run_manifest
 from unlearn_bench.methods import apply_method, supervised_train
 from unlearn_bench.methods.common import clone_model, trainable_parameter_count
 from unlearn_bench.models import TinyAssociationLM, build_vocabulary
+from unlearn_bench.utils.device import memory_metrics, reset_peak_memory, select_device, synchronize
 from unlearn_bench.utils.reproducibility import (
     atomic_json,
     git_commit,
@@ -42,13 +43,21 @@ def _versions() -> dict[str, str | None]:
     }
 
 
-def _hardware() -> dict[str, Any]:
+def _hardware(device: str) -> dict[str, Any]:
+    gpu = None
+    if device == "cuda":
+        gpu = torch.cuda.get_device_name(torch.cuda.current_device())
+    elif device == "mps":
+        gpu = "Apple Metal Performance Shaders"
     return {
         "hostname": socket.gethostname(),
         "platform": platform.platform(),
         "cpu": platform.processor() or "unknown",
-        "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+        "gpu": gpu,
         "cuda_available": torch.cuda.is_available(),
+        "mps_available": bool(
+            getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
+        ),
     }
 
 
@@ -58,9 +67,20 @@ def _run_id(experiment: str, method: str, seed: int, timestamp: str) -> str:
     return f"{experiment}-{method}-s{seed}-{suffix}"
 
 
-def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]:
+def run_experiment(
+    config_path: str | Path,
+    root: str | Path = ".",
+    *,
+    overrides: dict[str, Any] | None = None,
+) -> list[str]:
     root = Path(root).resolve()
     config = resolve_experiment(config_path)
+    config.update(overrides or {})
+    context = select_device(
+        config.get("device", "auto"),
+        config.get("precision", "auto"),
+        allow_mps_fallback=config.get("allow_mps_fallback", False),
+    )
     config["config_path"] = str(Path(config_path).resolve().relative_to(root))
     if config.get("requires_calibration_approval", False):
         marker = root / "results" / "manifests" / "CALIBRATION_REVIEWED"
@@ -87,8 +107,10 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
     run_set_id = f"{config['name']}-{sha256_value(invocation_timestamp)[:8]}"
     run_ids = []
     for seed in config["seeds"]:
-        set_seed(seed)
-        base = TinyAssociationLM(len(vocabulary.tokens), model_config["hidden_size"])
+        reproducibility = set_seed(seed, deterministic=config.get("deterministic", True))
+        base = TinyAssociationLM(len(vocabulary.tokens), model_config["hidden_size"]).to(
+            device=context.device, dtype=context.dtype
+        )
         full = clone_model(base)
         exact = clone_model(base)
         train_cfg = config["training"]
@@ -112,8 +134,8 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
         )
         exact_training_runtime = time.perf_counter() - exact_started
         for method in config["methods"]:
-            if torch.cuda.is_available():
-                torch.cuda.reset_peak_memory_stats()
+            reset_peak_memory(context)
+            synchronize(context)
             started = time.perf_counter()
             model, method_metadata = apply_method(
                 method,
@@ -126,6 +148,7 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
                 seed,
             )
             predictions = evaluate_model(model, exact, vocabulary, records["test"])
+            synchronize(context)
             metrics = metrics_from_predictions(predictions)
             intervention_runtime = time.perf_counter() - started
             setup_runtime = {
@@ -150,8 +173,9 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
             metrics_path = run_dir / "metrics.json"
             write_jsonl(predictions_path, predictions)
             atomic_json(metrics_path, metrics)
+            measured_memory = memory_metrics(context)
             manifest = {
-                "schema_version": 1,
+                "schema_version": 2,
                 "run_id": run_id,
                 "run_set_id": run_set_id,
                 "experiment_name": config["name"],
@@ -163,6 +187,11 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
                 "model_repository": model_config.get("repository"),
                 "model_revision": model_config["revision"],
                 "tokenizer_revision": model_config["tokenizer_revision"],
+                "tokenizer_name": model_config.get(
+                    "tokenizer_repository", model_config.get("repository", model_config["name"])
+                ),
+                "trust_remote_code": model_config.get("trust_remote_code", False),
+                "attention_implementation": model_config.get("attention_implementation"),
                 "dataset": config["dataset"],
                 "dataset_hashes": {
                     split: sha256_file(dataset_dir / f"{split}.jsonl") for split in records
@@ -179,14 +208,27 @@ def run_experiment(config_path: str | Path, root: str | Path = ".") -> list[str]
                     "method": config["method_configs"][method],
                 },
                 "random_seed": seed,
-                "hardware": _hardware(),
+                "device": context.device,
+                "dtype": context.precision,
+                "backend": context.backend,
+                "device_fallback": {
+                    "allowed": config.get("allow_mps_fallback", False),
+                    "mps_environment_enabled": context.mps_fallback_enabled,
+                    "observed": None if context.mps_fallback_enabled else False,
+                    "note": (
+                        "PyTorch does not expose per-operation MPS fallback telemetry"
+                        if context.mps_fallback_enabled
+                        else None
+                    ),
+                },
+                "reproducibility": reproducibility.manifest(),
+                "hardware": _hardware(context.device),
                 "versions": _versions(),
                 "runtime_seconds": runtime,
                 "intervention_runtime_seconds": intervention_runtime,
                 "attributed_setup_runtime_seconds": setup_runtime,
-                "peak_vram_bytes": (
-                    torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0
-                ),
+                "peak_vram_bytes": measured_memory["peak_device_memory_bytes"],
+                "device_memory": measured_memory,
                 "trainable_parameters": trainable_parameter_count(model),
                 "checkpoint_size_bytes": checkpoint.stat().st_size,
                 "final_checkpoint_path": str(checkpoint.relative_to(root)),

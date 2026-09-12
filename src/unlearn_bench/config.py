@@ -5,6 +5,8 @@ from typing import Any
 
 import yaml
 
+from unlearn_bench.utils.device import DEVICE_CHOICES, PRECISION_CHOICES
+
 REQUIRED_EXPERIMENT_KEYS = {"name", "track", "model", "dataset", "methods", "seeds"}
 
 
@@ -27,6 +29,12 @@ def validate_experiment(config: dict[str, Any]) -> None:
         raise ValueError("methods and seeds must be non-empty")
     if len(set(config["seeds"])) != len(config["seeds"]):
         raise ValueError("seeds must be unique")
+    if config.get("device", "auto") not in DEVICE_CHOICES:
+        raise ValueError(f"device must be one of {DEVICE_CHOICES}")
+    if config.get("precision", "auto") not in PRECISION_CHOICES:
+        raise ValueError(f"precision must be one of {PRECISION_CHOICES}")
+    if not isinstance(config.get("allow_mps_fallback", False), bool):
+        raise ValueError("allow_mps_fallback must be boolean")
 
 
 def resolve_experiment(path: str | Path) -> dict[str, Any]:

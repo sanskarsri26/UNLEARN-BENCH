@@ -5,6 +5,7 @@ import json
 import os
 import random
 import subprocess
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -28,14 +29,46 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
-def set_seed(seed: int, deterministic: bool = True) -> None:
+@dataclass(frozen=True)
+class ReproducibilitySettings:
+    seed: int
+    deterministic_algorithms: bool
+    deterministic_warn_only: bool
+    cudnn_benchmark: bool
+    cudnn_deterministic: bool
+    bitwise_scope: str = "same software and device stack only"
+
+    def manifest(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def set_seed(seed: int, deterministic: bool = True) -> ReproducibilitySettings:
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = deterministic
     if deterministic:
         torch.use_deterministic_algorithms(True, warn_only=True)
+    else:
+        torch.use_deterministic_algorithms(False)
+    return ReproducibilitySettings(
+        seed=seed,
+        deterministic_algorithms=deterministic,
+        deterministic_warn_only=deterministic,
+        cudnn_benchmark=torch.backends.cudnn.benchmark,
+        cudnn_deterministic=torch.backends.cudnn.deterministic,
+    )
+
+
+def seed_worker(worker_id: int) -> None:
+    """Seed NumPy and Python from the worker seed assigned by a PyTorch DataLoader."""
+    del worker_id
+    worker_seed = torch.initial_seed() % (2**32)
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
 
 
 def git_commit(root: str | Path = ".") -> str:

@@ -1,5 +1,9 @@
 name: controlled-smoke-v1
 track: controlled_unlearning
+device: auto
+precision: auto
+allow_mps_fallback: false
+deterministic: true
 model: tiny_fixture
 dataset: controlled_v1
 methods:

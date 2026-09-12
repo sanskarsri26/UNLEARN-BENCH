@@ -4,6 +4,30 @@ from pathlib import Path
 
 from unlearn_bench.manifest import validate_run_manifest
 
+REQUIRED_V1_FIELDS = {
+    "run_id",
+    "run_set_id",
+    "experiment_name",
+    "timestamp_utc",
+    "git_commit",
+    "model_name",
+    "model_revision",
+    "tokenizer_revision",
+    "dataset_hashes",
+    "split_hashes",
+    "method",
+    "configuration",
+    "random_seed",
+    "hardware",
+    "versions",
+    "runtime_seconds",
+    "peak_vram_bytes",
+    "trainable_parameters",
+    "final_checkpoint_path",
+    "predictions_path",
+    "metrics_path",
+}
+
 
 class ManifestTests(unittest.TestCase):
     def test_required_fields_and_artifacts(self):
@@ -39,3 +63,9 @@ class ManifestTests(unittest.TestCase):
     def test_missing_field_fails(self):
         with self.assertRaisesRegex(ValueError, "missing fields"):
             validate_run_manifest({})
+
+    def test_schema_v2_requires_device_provenance(self):
+        manifest = {field: None for field in REQUIRED_V1_FIELDS}
+        manifest["schema_version"] = 2
+        with self.assertRaisesRegex(ValueError, "device fields"):
+            validate_run_manifest(manifest)

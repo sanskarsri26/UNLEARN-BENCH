@@ -1,5 +1,9 @@
 name: controlled-main-mamba-v1
 track: controlled_unlearning
+device: auto
+precision: auto
+allow_mps_fallback: false
+deterministic: true
 model: mamba_370m
 dataset: controlled_v1
 methods:

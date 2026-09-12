@@ -5,3 +5,6 @@ repository: EleutherAI/pythia-160m
 revision: 50f5173
 tokenizer_revision: 50f5173
 model_class: AutoModelForCausalLM
+tokenizer_repository: EleutherAI/pythia-160m
+trust_remote_code: false
+attention_implementation: eager
