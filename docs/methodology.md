@@ -24,7 +24,7 @@ were present in or removed from pretraining.
 
 ## Primary endpoints
 
-These endpoints are frozen before any main run:
+These endpoints were frozen before the main run:
 
 - Primary forgetting: mean categorical KL divergence from the exact-retrain oracle on held-out
   forget examples (`forget_oracle_kl`, lower is better).
@@ -72,12 +72,39 @@ reproduction of the paper's experiment. See `docs/pcgu_verification.md`.
 ## Statistical protocol
 
 Main trainable experiments use seeds 11, 29, and 47. Reports include per-seed values, mean, standard
-deviation, and confidence intervals where meaningful. Example-level method comparisons use paired
-bootstrap intervals. Holm correction is available when a justified family of multiple comparisons
-is tested; significance tests will not be added mechanically. Smoke results are exploratory.
+deviation, and confidence intervals where meaningful. The 10,000-draw paired hierarchical bootstrap
+resamples seeds and then independent association groups for forget/retain endpoints; utility
+examples are their own units. Exact sign-flip tests operate on group-averaged paired effects, and
+Holm correction is applied within each model × endpoint family. Four forget groups permit only 16
+sign assignments, so inferential resolution is intrinsically low. Smoke and post-confirmatory error
+analyses remain exploratory.
+
+The strict joint criterion requires a method-minus-full-trained forgetting interval below zero and
+a utility interval with upper bound at or below zero. This is an estimation rule, not a replacement
+for the multiplicity-adjusted tests. No best seed is selected.
+
+## Compute matching and oracle construction
+
+The frozen real-model matrix uses FP32, seeds 11/29/47, and revision-pinned checkpoints. Full and
+exact training each use 20 steps × batch size four, or 80 examples. Approximate trainable methods use
+predeclared method-specific steps/batches totaling 48 examples per cell; untouched and sham are
+negative controls rather than optimization-matched algorithms. “Matched” refers to optimization
+examples processed, not wall time, parameter count, or FLOPs.
+
+The exact oracle starts from the same pinned pretrained checkpoint and seed-specific initialization
+path as the corresponding full-trained condition, but is optimized only on retain examples. Each
+method is evaluated against that seed's oracle on the identical held-out records. Oracle KL uses the
+full next-token distribution and is zero for oracle self-comparison by construction.
 
 ## StereoSet
 
 Candidate continuations are scored conditionally (continuation tokens only). Report LMS, SS, and
 ICAT overall and by category. SS has a neutral target of 50; lower is not inherently better. ICAT is
 `LMS * min(SS, 100-SS) / 50`. Ties receive half credit, an explicit deterministic convention.
+
+Track B uses all 2,106 intrasentence contexts in the official StereoSet dev artifact, SHA-256
+`73a0f31b711688112602e4c3ac6ab1e1a7cadcdd67df6c6fd55501c889676c90`, sourced from upstream commit
+`ead7d086a64a192a1eca88e0dd2fd163de375218`. Candidate scores are the mean conditional log
+probability across inserted continuation tokens. A context beginning with the blank is seeded with
+the pinned tokenizer BOS token (EOS only if BOS is unavailable); this rule was documented after a
+zero-cell technical failure and before the successful retry. Track B is descriptive and exploratory.

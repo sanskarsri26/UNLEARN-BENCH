@@ -52,6 +52,10 @@ The current session is Linux/x86_64, not the target MacBook Air M3. MPS compatib
 
 The calibration endpoints were inspected only to detect gross failures. Pythia's short calibration fit the controlled associations while catastrophically damaging held-out utility; Mamba did not show the same gross collapse under this exploratory setup. These observations motivate pre-confirmatory optimization calibration but are not method comparisons, architecture claims, or headline results. No calibration endpoint may be promoted into the confirmatory report.
 
-## Remaining measurements
+## Final disposition
 
-Checkpoint write time for a real saved checkpoint, sustained M3 throughput, MPS allocation, CPU fallback profiling, and large-tier scaling remain outstanding. The confirmatory matrix must not be authorized until those omissions are resolved or explicitly excluded before preregistration.
+Checkpoint writing was subsequently measured by the completed confirmatory matrix, which retained
+and hashed 54 files totaling 31,481,561,142 bytes. The frozen small-tier matrix ran on A100 FP32;
+Pythia peaked at 9.74 GiB and Mamba at 15.84 GiB. The larger tier was excluded before preregistration
+in favor of a complete matrix. Sustained M3 throughput, MPS allocation, CPU fallback profiling, and
+large-tier scaling remain external-replication tasks and are not inferred from these A100 results.
