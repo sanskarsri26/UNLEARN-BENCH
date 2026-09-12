@@ -96,10 +96,24 @@ def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = No
         raise ValueError("runtime and peak VRAM cannot be negative")
     if root is not None:
         root = Path(root).resolve()
-        for field in ("final_checkpoint_path", "predictions_path", "metrics_path"):
+        for field in ("predictions_path", "metrics_path"):
             path = (root / manifest[field]).resolve()
             if root not in path.parents or not path.is_file():
                 raise ValueError(f"Manifest artifact is missing or outside the repository: {field}")
+        checkpoint = (root / manifest["final_checkpoint_path"]).resolve()
+        if root not in checkpoint.parents:
+            raise ValueError("Manifest checkpoint is outside the repository")
+        if not checkpoint.is_file():
+            retained_externally = (
+                manifest.get("checkpoint_status") == "saved"
+                and isinstance(manifest.get("checkpoint_sha256"), str)
+                and len(manifest["checkpoint_sha256"]) == 64
+                and manifest.get("checkpoint_size_bytes", 0) > 0
+            )
+            if not retained_externally:
+                raise ValueError(
+                    "Manifest checkpoint is missing without external-retention metadata"
+                )
 
 
 def validate_failure_record(record: dict[str, Any]) -> None:
