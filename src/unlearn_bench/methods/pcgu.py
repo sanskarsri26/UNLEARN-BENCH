@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import time
 from dataclasses import dataclass
 
 import torch
@@ -13,9 +14,13 @@ from unlearn_bench.models.tiny import TinyAssociationLM, Vocabulary
 @dataclass
 class PCGUSelection:
     masks: dict[str, torch.Tensor]
-    similarities: list[float]
     selected: int
     total: int
+    similarity_min: float
+    similarity_max: float
+    gradient_bytes: int
+    mask_bytes: int
+    ranking_seconds: float
 
 
 def _vector_partitions(name: str, tensor: torch.Tensor):
@@ -50,35 +55,49 @@ def compute_pcgu_selection(
     """
     if not 0 < selected_fraction <= 1:
         raise ValueError("selected_fraction must be in (0, 1]")
-    candidates = []
+    started = time.perf_counter()
+    similarity_chunks: list[torch.Tensor] = []
+    partitions: list[tuple[str, int, int]] = []
     masks = {
         name: torch.zeros_like(parameter, dtype=torch.bool) for name, parameter in named_parameters
     }
-    for order, ((name, parameter), grad_a, grad_b) in enumerate(
-        zip(named_parameters, gradients_a, gradients_b, strict=True)
+    offset = 0
+    gradient_bytes = 0
+    for (name, parameter), grad_a, grad_b in zip(
+        named_parameters, gradients_a, gradients_b, strict=True
     ):
         if grad_a is None or grad_b is None or not parameter.requires_grad:
             continue
-        for vector_order, (_, prefix, vector_a) in enumerate(_vector_partitions(name, grad_a)):
-            vector_b = grad_b if prefix is None else grad_b[prefix]
-            similarity = F.cosine_similarity(
-                vector_a.reshape(1, -1), vector_b.reshape(1, -1), dim=-1, eps=1e-12
-            ).item()
-            candidates.append((similarity, order, vector_order, name, prefix))
-    if not candidates:
+        width = grad_a.shape[-1] if grad_a.ndim > 1 else grad_a.numel()
+        vectors_a = grad_a.reshape(-1, width)
+        vectors_b = grad_b.reshape(-1, width)
+        similarities = F.cosine_similarity(vectors_a, vectors_b, dim=-1, eps=1e-12)
+        similarities = similarities.detach().float().cpu()
+        similarity_chunks.append(similarities)
+        partitions.append((name, offset, offset + similarities.numel()))
+        offset += similarities.numel()
+        gradient_bytes += grad_a.numel() * grad_a.element_size()
+        gradient_bytes += grad_b.numel() * grad_b.element_size()
+    if not similarity_chunks:
         raise ValueError("PCGU found no trainable gradient partitions")
-    candidates.sort(key=lambda item: (item[0], item[1], item[2]))
-    count = max(1, math.ceil(len(candidates) * selected_fraction))
-    for _, _, _, name, prefix in candidates[:count]:
-        if prefix is None:
-            masks[name].fill_(True)
-        else:
-            masks[name][prefix] = True
+    all_similarities = torch.cat(similarity_chunks)
+    count = max(1, math.ceil(all_similarities.numel() * selected_fraction))
+    selected_indices = torch.argsort(all_similarities, stable=True)[:count]
+    for name, begin, end in partitions:
+        local = selected_indices[(selected_indices >= begin) & (selected_indices < end)] - begin
+        if local.numel():
+            width = masks[name].shape[-1] if masks[name].ndim > 1 else masks[name].numel()
+            mask_vectors = masks[name].reshape(-1, width)
+            mask_vectors[local.to(mask_vectors.device)] = True
     return PCGUSelection(
         masks=masks,
-        similarities=[item[0] for item in candidates],
         selected=count,
-        total=len(candidates),
+        total=all_similarities.numel(),
+        similarity_min=float(all_similarities.min()),
+        similarity_max=float(all_similarities.max()),
+        gradient_bytes=gradient_bytes,
+        mask_bytes=sum(mask.numel() * mask.element_size() for mask in masks.values()),
+        ranking_seconds=time.perf_counter() - started,
     )
 
 

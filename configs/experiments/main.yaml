@@ -1,7 +1,7 @@
 name: controlled-main-pythia-v1
 track: controlled_unlearning
 device: auto
-precision: auto
+precision: fp32
 allow_mps_fallback: false
 deterministic: true
 model: pythia_410m

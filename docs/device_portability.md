@@ -6,7 +6,9 @@ Experiments accept `device: auto|cuda|mps|cpu` and `precision: auto|fp32|fp16|bf
 through `scripts/run_experiment.py`. `auto` selects CUDA, then MPS, then CPU. An explicit unavailable
 device raises an error; it never falls back to another device. CUDA auto precision selects BF16 only
 when PyTorch reports support and a forward/backward probe succeeds. MPS and CPU auto precision use
-FP32. Explicit precision requests must pass the same probe; CPU FP16 is rejected by policy.
+FP32. Explicit precision requests must pass the same probe; CPU FP16 is rejected by policy. The
+real-model calibration and main configurations explicitly use FP32 because ordinary AdamW does not
+maintain FP32 master parameters for BF16 model weights; mixed-precision training remains unverified.
 
 `PYTORCH_ENABLE_MPS_FALLBACK=1` is rejected unless `allow_mps_fallback: true` is also set. When it is
 allowed, the manifest records that the environment fallback is enabled and states that PyTorch does

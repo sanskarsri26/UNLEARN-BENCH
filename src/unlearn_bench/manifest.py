@@ -27,7 +27,16 @@ REQUIRED_RUN_FIELDS = {
     "metrics_path",
 }
 
-DEVICE_RUN_FIELDS = {"device", "dtype", "backend", "reproducibility", "device_fallback"}
+DEVICE_RUN_FIELDS = {
+    "attention_implementation",
+    "backend",
+    "device",
+    "device_fallback",
+    "dtype",
+    "reproducibility",
+    "tokenizer_name",
+    "trust_remote_code",
+}
 
 
 def validate_run_manifest(manifest: dict[str, Any], root: str | Path | None = None) -> None:

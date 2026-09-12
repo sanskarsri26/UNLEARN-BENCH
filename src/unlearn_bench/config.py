@@ -35,6 +35,10 @@ def validate_experiment(config: dict[str, Any]) -> None:
         raise ValueError(f"precision must be one of {PRECISION_CHOICES}")
     if not isinstance(config.get("allow_mps_fallback", False), bool):
         raise ValueError("allow_mps_fallback must be boolean")
+    if config.get("checkpoint_policy", "saved") not in {"saved", "metadata_only"}:
+        raise ValueError("checkpoint_policy must be saved or metadata_only")
+    if config.get("checkpoint_policy") == "metadata_only" and "calibration" not in config["name"]:
+        raise ValueError("metadata_only checkpoints are restricted to calibration runs")
 
 
 def resolve_experiment(path: str | Path) -> dict[str, Any]:

@@ -103,6 +103,8 @@ def select_device(
     allow_mps_fallback: bool = False,
 ) -> DeviceContext:
     device = _resolve_device(requested_device)
+    if device == "cuda":
+        os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
     fallback_enabled = os.environ.get("PYTORCH_ENABLE_MPS_FALLBACK") == "1"
     if device == "mps" and fallback_enabled and not allow_mps_fallback:
         raise RuntimeError(

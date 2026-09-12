@@ -34,6 +34,12 @@ Forget-set NLL, target probability, conditional log-probability margin, retain N
 utility perplexity/accuracy, runtime, peak VRAM, checkpoint size, and parameter count are secondary.
 A method is not successful when it reduces a forget score by degrading utility broadly.
 
+For causal LMs, completion loss is computed only on continuation tokens. Oracle KL is computed over
+the complete next-token vocabulary at each teacher-forced completion position and averaged first
+within an example and then across the forget partition. Multi-token target probability is reported
+as the geometric mean of its conditional token probabilities. The tiny fixture uses the equivalent
+single-position categorical definition.
+
 ## Controlled data
 
 `controlled-associations-v1` contains artificial entity–code associations. Train, validation, and

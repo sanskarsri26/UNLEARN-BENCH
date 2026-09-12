@@ -48,9 +48,9 @@ masked-LM method are documented in [PCGU verification](docs/pcgu_verification.md
 ## Models
 
 The local `tiny-association-fixture` makes the complete pipeline and CI CPU-runnable. It is not a
-scientific model. Revision-pinned base-model configurations are supplied for Pythia-160M,
-Mamba-130M, Pythia-410M, and Mamba-370M. The current runner intentionally gates these GPU tiers
-until the checkpoint-efficient Hugging Face adapter and compute calibration are reviewed.
+scientific model. The causal-LM adapter supports revision-pinned Pythia-160M, Mamba-130M,
+Pythia-410M, and Mamba-370M configurations. Main configurations remain gated until real-model
+device calibration and preregistration are reviewed.
 
 ## Evaluation
 
@@ -113,13 +113,12 @@ not be cited as reboot results. See the [legacy audit](docs/legacy_audit.md).
 
 ## Limitations
 
-The completed smoke uses a synthetic fixture, real-model training is not yet executable, Track B has
-no versioned external dataset artifact, and cross-family comparisons will be observational. Exact
-scope and deferred evaluations are listed in [limitations](docs/limitations.md).
+The completed smoke uses a synthetic fixture, real-model training is implemented but not yet
+calibrated, Track B has no versioned external dataset artifact, and cross-family comparisons will be
+observational. Exact scope and deferred evaluations are listed in [limitations](docs/limitations.md).
 
 ## Future Work
 
-Implement and test the checkpoint-efficient Hugging Face causal-LM adapter; calibrate Pythia-160M
-and Mamba-130M on the target GPU; review and freeze the resulting compute budget; run the three-seed
-main matrix; then add focused ablations, paired uncertainty, category-level error analysis, and
-licensed Track B benchmarks.
+Calibrate Pythia-160M and Mamba-130M on the target devices; review and freeze the resulting compute
+budget; run the three-seed main matrix; then add focused ablations, paired uncertainty,
+category-level error analysis, and licensed Track B benchmarks.

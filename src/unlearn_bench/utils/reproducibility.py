@@ -36,6 +36,7 @@ class ReproducibilitySettings:
     deterministic_warn_only: bool
     cudnn_benchmark: bool
     cudnn_deterministic: bool
+    cublas_workspace_config: str | None
     bitwise_scope: str = "same software and device stack only"
 
     def manifest(self) -> dict[str, Any]:
@@ -60,6 +61,7 @@ def set_seed(seed: int, deterministic: bool = True) -> ReproducibilitySettings:
         deterministic_warn_only=deterministic,
         cudnn_benchmark=torch.backends.cudnn.benchmark,
         cudnn_deterministic=torch.backends.cudnn.deterministic,
+        cublas_workspace_config=os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
     )
 
 

@@ -12,3 +12,5 @@ reports/figures/*.png
 reports/tables/*
 !results/**/.gitkeep
 !reports/**/.gitkeep
+outputs/slurm_logs/*
+outputs/slurm_logs/

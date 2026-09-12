@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import platform
+import resource
 import socket
 import time
 from datetime import datetime, timezone
@@ -12,11 +13,12 @@ import torch
 
 from unlearn_bench.config import resolve_experiment
 from unlearn_bench.data import load_records, validate_manifests
-from unlearn_bench.evaluation import evaluate_model, metrics_from_predictions
+from unlearn_bench.evaluation import evaluate_causal_lm, evaluate_model, metrics_from_predictions
 from unlearn_bench.manifest import validate_run_manifest
-from unlearn_bench.methods import apply_method, supervised_train
+from unlearn_bench.methods import apply_hf_method, apply_method, supervised_train, train_causal_lm
+from unlearn_bench.methods.hf import clone_causal_lm
 from unlearn_bench.methods.common import clone_model, trainable_parameter_count
-from unlearn_bench.models import TinyAssociationLM, build_vocabulary
+from unlearn_bench.models import TinyAssociationLM, build_vocabulary, causal_batch, load_causal_lm
 from unlearn_bench.utils.device import memory_metrics, reset_peak_memory, select_device, synchronize
 from unlearn_bench.utils.reproducibility import (
     atomic_json,
@@ -40,13 +42,19 @@ def _versions() -> dict[str, str | None]:
         "torch": torch.__version__,
         "transformers": transformers_version,
         "cuda": torch.version.cuda,
+        "cudnn": (
+            str(torch.backends.cudnn.version()) if torch.backends.cudnn.is_available() else None
+        ),
     }
 
 
 def _hardware(device: str) -> dict[str, Any]:
     gpu = None
+    device_memory_bytes = None
     if device == "cuda":
         gpu = torch.cuda.get_device_name(torch.cuda.current_device())
+        properties = torch.cuda.get_device_properties(torch.cuda.current_device())
+        device_memory_bytes = properties.total_memory
     elif device == "mps":
         gpu = "Apple Metal Performance Shaders"
     return {
@@ -54,11 +62,18 @@ def _hardware(device: str) -> dict[str, Any]:
         "platform": platform.platform(),
         "cpu": platform.processor() or "unknown",
         "gpu": gpu,
+        "device_memory_bytes": device_memory_bytes,
         "cuda_available": torch.cuda.is_available(),
         "mps_available": bool(
             getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
         ),
     }
+
+
+def _peak_process_memory_bytes() -> int:
+    maximum_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    # macOS reports bytes; Linux and the other supported CI targets report KiB.
+    return int(maximum_rss if platform.system() == "Darwin" else maximum_rss * 1024)
 
 
 def _run_id(experiment: str, method: str, seed: int, timestamp: str) -> str:
@@ -95,85 +110,181 @@ def run_experiment(
         split: load_records(dataset_dir / f"{split}.jsonl")
         for split in ("train", "validation", "test")
     }
-    all_records = records["train"] + records["validation"] + records["test"]
-    vocabulary = build_vocabulary(all_records)
     model_config = config["model_config"]
-    if model_config["backend"] != "tiny_association":
-        raise RuntimeError(
-            "The v0.1 executable runner supports the calibrated tiny backend. Revision-pinned HF "
-            "models are declared for the GPU implementation milestone; see docs/limitations.md."
-        )
+    backend = model_config["backend"]
+    if backend not in {"tiny_association", "huggingface_causal_lm"}:
+        raise RuntimeError(f"Unsupported model backend: {backend}")
+    all_records = records["train"] + records["validation"] + records["test"]
+    preprocessing_started = time.perf_counter()
+    vocabulary = build_vocabulary(all_records) if backend == "tiny_association" else None
+    shared_preprocessing_seconds = time.perf_counter() - preprocessing_started
     invocation_timestamp = datetime.now(timezone.utc).isoformat()
     run_set_id = f"{config['name']}-{sha256_value(invocation_timestamp)[:8]}"
     run_ids = []
     for seed in config["seeds"]:
         reproducibility = set_seed(seed, deterministic=config.get("deterministic", True))
-        base = TinyAssociationLM(len(vocabulary.tokens), model_config["hidden_size"]).to(
-            device=context.device, dtype=context.dtype
-        )
-        full = clone_model(base)
-        exact = clone_model(base)
+        load_started = time.perf_counter()
+        if backend == "tiny_association":
+            assert vocabulary is not None
+            base = TinyAssociationLM(len(vocabulary.tokens), model_config["hidden_size"]).to(
+                device=context.device, dtype=context.dtype
+            )
+            full = clone_model(base)
+            exact = clone_model(base)
+            tokenizer = None
+        else:
+            base, tokenizer = load_causal_lm(model_config, context)
+            full = clone_causal_lm(base)
+            exact = clone_causal_lm(base)
+        synchronize(context)
+        model_load_seconds = time.perf_counter() - load_started
+        if backend == "huggingface_causal_lm":
+            preprocessing_started = time.perf_counter()
+            causal_batch(tokenizer, all_records, context.device)
+            synchronize(context)
+            preprocessing_seconds = time.perf_counter() - preprocessing_started
+        else:
+            preprocessing_seconds = shared_preprocessing_seconds
         train_cfg = config["training"]
         full_started = time.perf_counter()
-        supervised_train(
-            full,
-            vocabulary,
-            records["train"],
-            steps=train_cfg["steps"],
-            learning_rate=train_cfg["learning_rate"],
-        )
+        if backend == "tiny_association":
+            supervised_train(
+                full,
+                vocabulary,
+                records["train"],
+                steps=train_cfg["steps"],
+                learning_rate=train_cfg["learning_rate"],
+            )
+            full_training_metadata = {
+                "steps": train_cfg["steps"],
+                "examples_processed": train_cfg["steps"] * len(records["train"]),
+                "tokens_processed": None,
+            }
+        else:
+            full_training_metadata = train_causal_lm(
+                full,
+                tokenizer,
+                records["train"],
+                steps=train_cfg["steps"],
+                learning_rate=train_cfg["learning_rate"],
+            )
+        synchronize(context)
         full_training_runtime = time.perf_counter() - full_started
         retain_train = [row for row in records["train"] if row["partition"] != "forget"]
         exact_started = time.perf_counter()
-        supervised_train(
-            exact,
-            vocabulary,
-            retain_train,
-            steps=train_cfg["steps"],
-            learning_rate=train_cfg["learning_rate"],
-        )
+        if backend == "tiny_association":
+            supervised_train(
+                exact,
+                vocabulary,
+                retain_train,
+                steps=train_cfg["steps"],
+                learning_rate=train_cfg["learning_rate"],
+            )
+            exact_training_metadata = {
+                "steps": train_cfg["steps"],
+                "examples_processed": train_cfg["steps"] * len(retain_train),
+                "tokens_processed": None,
+            }
+        else:
+            exact_training_metadata = train_causal_lm(
+                exact,
+                tokenizer,
+                retain_train,
+                steps=train_cfg["steps"],
+                learning_rate=train_cfg["learning_rate"],
+            )
+        synchronize(context)
         exact_training_runtime = time.perf_counter() - exact_started
         for method in config["methods"]:
             reset_peak_memory(context)
             synchronize(context)
-            started = time.perf_counter()
-            model, method_metadata = apply_method(
-                method,
-                full,
-                base,
-                exact,
-                vocabulary,
-                records["train"],
-                config["method_configs"][method],
-                seed,
-            )
-            predictions = evaluate_model(model, exact, vocabulary, records["test"])
+            intervention_started = time.perf_counter()
+            method_config = dict(config["method_configs"][method])
+            method_config.update(config.get("method_overrides", {}).get(method, {}))
+            if backend == "tiny_association":
+                model, method_metadata = apply_method(
+                    method,
+                    full,
+                    base,
+                    exact,
+                    vocabulary,
+                    records["train"],
+                    method_config,
+                    seed,
+                )
+            else:
+                model, method_metadata = apply_hf_method(
+                    method,
+                    full,
+                    base,
+                    exact,
+                    tokenizer,
+                    records["train"],
+                    method_config,
+                    seed,
+                )
             synchronize(context)
+            intervention_runtime = time.perf_counter() - intervention_started
+            evaluation_started = time.perf_counter()
+            if backend == "tiny_association":
+                predictions = evaluate_model(model, exact, vocabulary, records["test"])
+            else:
+                predictions = evaluate_causal_lm(model, exact, tokenizer, records["test"])
+            synchronize(context)
+            evaluation_runtime = time.perf_counter() - evaluation_started
             metrics = metrics_from_predictions(predictions)
-            intervention_runtime = time.perf_counter() - started
             setup_runtime = {
                 "trained_full": full_training_runtime,
                 "exact_retrain": exact_training_runtime,
             }.get(method, 0.0)
-            runtime = intervention_runtime + setup_runtime
+            setup_metadata = {
+                "trained_full": full_training_metadata,
+                "exact_retrain": exact_training_metadata,
+            }.get(method, {"steps": 0, "examples_processed": 0, "tokens_processed": 0})
+            optimization_seconds = intervention_runtime + setup_runtime
+            runtime = optimization_seconds + evaluation_runtime
             timestamp = datetime.now(timezone.utc).isoformat()
             run_id = _run_id(config["name"], method, seed, timestamp)
             run_dir = root / "results" / "runs" / run_id
             run_dir.mkdir(parents=True, exist_ok=False)
-            checkpoint = run_dir / "checkpoint.pt"
-            torch.save(
-                {
-                    "state_dict": model.state_dict(),
-                    "vocabulary": vocabulary.tokens,
-                    "model": model_config,
-                },
-                checkpoint,
-            )
+            checkpoint_policy = config.get("checkpoint_policy", "saved")
+            checkpoint_started = time.perf_counter()
+            if checkpoint_policy == "saved":
+                checkpoint = run_dir / "checkpoint.pt"
+                torch.save(
+                    {
+                        "state_dict": model.state_dict(),
+                        "vocabulary": vocabulary.tokens if vocabulary is not None else None,
+                        "model": model_config,
+                    },
+                    checkpoint,
+                )
+            elif checkpoint_policy == "metadata_only" and "calibration" in config["name"]:
+                checkpoint = run_dir / "checkpoint-metadata.json"
+                atomic_json(
+                    checkpoint,
+                    {"status": "intentionally_omitted", "reason": "exploratory calibration"},
+                )
+            else:
+                raise ValueError(
+                    "checkpoint_policy must be saved, or metadata_only for a calibration run"
+                )
+            checkpoint_write_seconds = time.perf_counter() - checkpoint_started
             predictions_path = run_dir / "predictions.jsonl"
             metrics_path = run_dir / "metrics.json"
             write_jsonl(predictions_path, predictions)
             atomic_json(metrics_path, metrics)
             measured_memory = memory_metrics(context)
+            work_examples = setup_metadata["examples_processed"] + method_metadata.get(
+                "examples_processed", 0
+            )
+            setup_tokens = setup_metadata["tokens_processed"]
+            intervention_tokens = method_metadata.get("tokens_processed")
+            work_tokens = (
+                setup_tokens + intervention_tokens
+                if setup_tokens is not None and intervention_tokens is not None
+                else None
+            )
             manifest = {
                 "schema_version": 2,
                 "run_id": run_id,
@@ -205,7 +316,7 @@ def run_experiment(
                 "method": method,
                 "configuration": {
                     "experiment": config,
-                    "method": config["method_configs"][method],
+                    "method": method_config,
                 },
                 "random_seed": seed,
                 "device": context.device,
@@ -225,12 +336,35 @@ def run_experiment(
                 "hardware": _hardware(context.device),
                 "versions": _versions(),
                 "runtime_seconds": runtime,
+                "model_load_seconds": model_load_seconds,
+                "preprocessing_seconds": preprocessing_seconds,
                 "intervention_runtime_seconds": intervention_runtime,
+                "evaluation_runtime_seconds": evaluation_runtime,
+                "optimization_runtime_seconds": optimization_seconds,
                 "attributed_setup_runtime_seconds": setup_runtime,
+                "optimization_work": {
+                    "setup": setup_metadata,
+                    "intervention": {
+                        key: method_metadata.get(key)
+                        for key in ("steps", "examples_processed", "tokens_processed")
+                    },
+                },
+                "examples_per_second": (
+                    work_examples / optimization_seconds if optimization_seconds > 0 else None
+                ),
+                "tokens_per_second": (
+                    work_tokens / optimization_seconds
+                    if work_tokens is not None and optimization_seconds > 0
+                    else None
+                ),
                 "peak_vram_bytes": measured_memory["peak_device_memory_bytes"],
                 "device_memory": measured_memory,
+                "peak_process_memory_bytes": _peak_process_memory_bytes(),
                 "trainable_parameters": trainable_parameter_count(model),
                 "checkpoint_size_bytes": checkpoint.stat().st_size,
+                "checkpoint_write_seconds": checkpoint_write_seconds,
+                "checkpoint_status": checkpoint_policy,
+                "checkpoint_sha256": sha256_file(checkpoint),
                 "final_checkpoint_path": str(checkpoint.relative_to(root)),
                 "predictions_path": str(predictions_path.relative_to(root)),
                 "metrics_path": str(metrics_path.relative_to(root)),

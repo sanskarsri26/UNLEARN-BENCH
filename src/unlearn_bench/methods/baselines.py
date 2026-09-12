@@ -169,8 +169,11 @@ def apply_method(
             "selected_partitions": final.selected,
             "total_partitions": final.total,
             "selected_fraction_actual": final.selected / final.total,
-            "similarity_min": min(final.similarities),
-            "similarity_max": max(final.similarities),
+            "similarity_min": final.similarity_min,
+            "similarity_max": final.similarity_max,
+            "gradient_bytes": final.gradient_bytes,
+            "mask_bytes": final.mask_bytes,
+            "ranking_seconds": final.ranking_seconds,
             "partition_aggregation_dimension": -1,
             "update_gradient": "replacement_target",
         }
