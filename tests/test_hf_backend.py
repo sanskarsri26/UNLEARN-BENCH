@@ -114,6 +114,28 @@ class HuggingFaceBackendTests(unittest.TestCase):
         self.assertGreater(metadata["pcgu"]["selected_partitions"], 0)
         self.assertTrue(all("oracle_kl" in row for row in predictions))
 
+    def test_seeded_minibatches_are_reproducible_and_seed_sensitive(self):
+        base = FakeCausalLM()
+        first = clone_causal_lm(base)
+        second = clone_causal_lm(base)
+        third = clone_causal_lm(base)
+        arguments = {
+            "steps": 3,
+            "learning_rate": 0.01,
+            "batch_size": 1,
+        }
+        train_causal_lm(first, self.tokenizer, self.records, seed=11, **arguments)
+        train_causal_lm(second, self.tokenizer, self.records, seed=11, **arguments)
+        train_causal_lm(third, self.tokenizer, self.records, seed=29, **arguments)
+        for left, right in zip(first.parameters(), second.parameters(), strict=True):
+            self.assertTrue(torch.equal(left, right))
+        self.assertTrue(
+            any(
+                not torch.equal(left, right)
+                for left, right in zip(first.parameters(), third.parameters(), strict=True)
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

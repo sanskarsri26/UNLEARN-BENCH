@@ -1,0 +1,11 @@
+name: training-calibration-pythia-160m-v1
+model: pythia_160m
+device: cuda
+precision: fp32
+seed: 11
+batch_size: 4
+variants:
+  - {name: lr1e-6-s20, learning_rate: 0.000001, steps: 20}
+  - {name: lr3e-6-s20, learning_rate: 0.000003, steps: 20}
+  - {name: lr1e-5-s20, learning_rate: 0.00001, steps: 20}
+  - {name: lr3e-6-s50, learning_rate: 0.000003, steps: 50}

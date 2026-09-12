@@ -1,0 +1,9 @@
+name: training-calibration-mamba-130m-v1
+model: mamba_130m
+device: cuda
+precision: fp32
+seed: 11
+batch_size: 4
+variants:
+  - {name: lr1e-5-s20, learning_rate: 0.00001, steps: 20}
+  - {name: lr5e-5-s20, learning_rate: 0.00005, steps: 20}

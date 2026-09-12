@@ -167,6 +167,8 @@ def run_experiment(
                 records["train"],
                 steps=train_cfg["steps"],
                 learning_rate=train_cfg["learning_rate"],
+                batch_size=train_cfg.get("batch_size"),
+                seed=seed,
             )
         synchronize(context)
         full_training_runtime = time.perf_counter() - full_started
@@ -190,8 +192,10 @@ def run_experiment(
                 exact,
                 tokenizer,
                 retain_train,
-                steps=train_cfg["steps"],
+                steps=train_cfg.get("exact_steps", train_cfg["steps"]),
                 learning_rate=train_cfg["learning_rate"],
+                batch_size=train_cfg.get("batch_size"),
+                seed=seed + 1,
             )
         synchronize(context)
         exact_training_runtime = time.perf_counter() - exact_started

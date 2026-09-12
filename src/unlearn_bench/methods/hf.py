@@ -24,18 +24,36 @@ def train_causal_lm(
     steps: int,
     learning_rate: float,
     target_field: str = "completion",
+    batch_size: int | None = None,
+    seed: int = 0,
 ) -> dict[str, int]:
-    batch = causal_batch(tokenizer, records, next(model.parameters()).device, target_field)
+    if batch_size is None:
+        batch_size = len(records)
+    if not 0 < batch_size <= len(records):
+        raise ValueError("batch_size must be in [1, number of records]")
+    generator = torch.Generator(device="cpu").manual_seed(seed)
+    order: list[int] = []
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
     model.train()
+    examples_processed = 0
+    tokens_processed = 0
     for _ in range(steps):
+        while len(order) < batch_size:
+            order.extend(torch.randperm(len(records), generator=generator).tolist())
+        indices, order = order[:batch_size], order[batch_size:]
+        selected = [records[index] for index in indices]
+        batch = causal_batch(tokenizer, selected, next(model.parameters()).device, target_field)
         optimizer.zero_grad(set_to_none=True)
         causal_loss(model, batch).backward()
         optimizer.step()
+        examples_processed += len(selected)
+        tokens_processed += batch.completion_tokens
     return {
         "steps": steps,
-        "examples_processed": steps * len(records),
-        "tokens_processed": steps * batch.completion_tokens,
+        "examples_processed": examples_processed,
+        "tokens_processed": tokens_processed,
+        "batch_size": batch_size,
+        "seed": seed,
     }
 
 
@@ -160,6 +178,8 @@ def apply_hf_method(
             retain,
             steps=config["steps"],
             learning_rate=config["learning_rate"],
+            batch_size=config.get("batch_size"),
+            seed=seed + 101,
         )
     elif name == "counterfactual":
         counterfactual = [{**row, "completion": row["replacement"]} for row in forget]
@@ -169,6 +189,8 @@ def apply_hf_method(
             retain + counterfactual,
             steps=config["steps"],
             learning_rate=config["learning_rate"],
+            batch_size=config.get("batch_size"),
+            seed=seed + 211,
         )
     elif name == "gradient_ascent":
         metadata = _gradient_ascent(model, tokenizer, forget, retain, config)
