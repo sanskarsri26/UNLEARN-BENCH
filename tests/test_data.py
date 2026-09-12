@@ -2,7 +2,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from unlearn_bench.data import build_controlled_dataset, load_records, validate_manifests
+from unlearn_bench.data import (
+    build_controlled_dataset,
+    build_controlled_v2_dataset,
+    load_records,
+    validate_controlled_v2,
+    validate_dataset,
+    validate_manifests,
+)
 
 
 class ControlledDataTests(unittest.TestCase):
@@ -34,6 +41,38 @@ class ControlledDataTests(unittest.TestCase):
             )
             self.assertEqual(len({row["id"] for row in rows}), len(rows))
             self.assertEqual(len({row["hash"] for row in rows}), len(rows))
+
+    def test_v2_is_additive_deterministic_and_has_a_new_holdout(self):
+        with (
+            tempfile.TemporaryDirectory() as first_root,
+            tempfile.TemporaryDirectory() as second_root,
+        ):
+            first = Path(first_root) / "v2"
+            second = Path(second_root) / "v2"
+            left = build_controlled_v2_dataset(first)
+            right = build_controlled_v2_dataset(second)
+            self.assertEqual(left, right)
+            self.assertEqual(left["holdout_status"], "SEALED_UNTIL_PREREGISTERED_EXECUTION")
+            self.assertEqual(left["files"]["test"]["count"], 40)
+            self.assertEqual(
+                left["files"]["test"]["partitions"],
+                {"forget": 12, "retain": 18, "utility": 10},
+            )
+            validate_controlled_v2(first)
+            validate_dataset(first)
+            old_test_path = (
+                Path(__file__).resolve().parents[1] / "data" / "controlled" / "v1" / "test.jsonl"
+            )
+            old_test_hashes = {row["hash"] for row in load_records(old_test_path)}
+            new_test_hashes = {row["hash"] for row in load_records(first / "test.jsonl")}
+            self.assertTrue(old_test_hashes.isdisjoint(new_test_hashes))
+
+    def test_v2_builder_refuses_overwrite(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "v2"
+            build_controlled_v2_dataset(destination)
+            with self.assertRaises(FileExistsError):
+                build_controlled_v2_dataset(destination)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,38 @@
+{
+  "confirmatory_holdout": "test",
+  "dataset": "controlled-associations-v2",
+  "files": {
+    "test": {
+      "count": 40,
+      "partitions": {
+        "forget": 12,
+        "retain": 18,
+        "utility": 10
+      },
+      "path": "test.jsonl",
+      "sha256": "3776547ae88199c9e4bb8ee7e51daafcacba9d9a1ea318741da560edb62c31b1"
+    },
+    "train": {
+      "count": 12,
+      "partitions": {
+        "forget": 4,
+        "retain": 6,
+        "utility": 2
+      },
+      "path": "train.jsonl",
+      "sha256": "2315886ab3eb25b2dee72aa5ab997351b531c9825998163c233b94f1713db05c"
+    },
+    "validation": {
+      "count": 12,
+      "partitions": {
+        "forget": 4,
+        "retain": 6,
+        "utility": 2
+      },
+      "path": "validation.jsonl",
+      "sha256": "855f5f9f06eeefd7d18427d20c47453f726974733b3623d15e91046be513d8c3"
+    }
+  },
+  "holdout_status": "SEALED_UNTIL_PREREGISTERED_EXECUTION",
+  "prior_dataset": "controlled-associations-v1"
+}

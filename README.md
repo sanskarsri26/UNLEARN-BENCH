@@ -97,7 +97,8 @@ compatibility remains unverified until hardware calibration is completed.
 
 ```text
 configs/                 versioned dataset, model, method, and experiment settings
-data/controlled/v1/      deterministic Track A manifests
+data/controlled/v1/      preserved exploratory Track A manifests
+data/controlled/v2/      sealed confirmatory Track A holdout and development manifests
 docs/                    methodology, audit, reproducibility, limitations, PCGU verification
 reports/                 compute budget plus generated figures and tables
 results/                 run manifests, raw predictions, checkpoints, and metrics

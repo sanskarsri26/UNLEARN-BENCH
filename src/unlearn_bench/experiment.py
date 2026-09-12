@@ -12,7 +12,7 @@ from typing import Any
 import torch
 
 from unlearn_bench.config import resolve_experiment
-from unlearn_bench.data import load_records, validate_manifests
+from unlearn_bench.data import load_records, validate_dataset
 from unlearn_bench.evaluation import evaluate_causal_lm, evaluate_model, metrics_from_predictions
 from unlearn_bench.manifest import validate_run_manifest
 from unlearn_bench.methods import apply_hf_method, apply_method, supervised_train, train_causal_lm
@@ -112,7 +112,7 @@ def run_experiment(
                 "results/manifests/CALIBRATION_REVIEWED with reviewer/date before running."
             )
     dataset_dir = root / config["dataset_config"]["path"]
-    validate_manifests(dataset_dir)
+    validate_dataset(dataset_dir)
     records = {
         split: load_records(dataset_dir / f"{split}.jsonl")
         for split in ("train", "validation", "test")

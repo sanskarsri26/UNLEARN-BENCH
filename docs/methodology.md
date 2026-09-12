@@ -42,11 +42,17 @@ single-position categorical definition.
 
 ## Controlled data
 
-`controlled-associations-v1` contains artificial entity–code associations. Train, validation, and
-test use different surface forms. Association group IDs intentionally recur to measure paraphrase
-generalization; exact IDs, prompt/completion pairs, and content hashes may not recur. Retain, forget,
+`controlled-associations-v1` contains artificial entity–code associations and remains the
+development/exploratory fixture. Its test split was inspected during smoke and calibration and is
+not eligible for confirmatory claims. `controlled-associations-v2` preserves that history while
+adding a new confirmatory holdout with three new association prompt forms and ten utility examples.
+The v2 test hash is frozen before preregistration and may not be scored during development.
+
+Association group IDs intentionally recur across surface forms to measure paraphrase generalization;
+exact IDs, prompt/completion pairs, and content hashes may not recur across splits. Retain, forget,
 and utility partitions are declared in every JSONL record. Counterfactual replacement targets are
-versioned rather than generated during training.
+versioned rather than generated during training. Confirmatory uncertainty resamples association
+groups rather than incorrectly treating paraphrases of the same association as independent.
 
 ## Baselines and methods
 

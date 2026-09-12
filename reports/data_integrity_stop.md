@@ -1,4 +1,8 @@
-# Data-integrity stop before confirmatory execution
+# Data-integrity stop before confirmatory execution — resolved
+
+**Resolution:** On 2026-09-11, the user authorized continuation after this stop. The repository
+preserves controlled/v1 unchanged as exploratory data and adds controlled/v2 with a newly generated,
+versioned confirmatory holdout. No model may score v2 test data before the preregistration commit.
 
 ## Finding
 
