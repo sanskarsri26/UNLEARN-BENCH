@@ -1,0 +1,10 @@
+run_set,experiment,git_commit,model,method,seeds,forget_oracle_kl_mean,forget_oracle_kl_sd,utility_nll_mean,utility_nll_sd,runtime_seconds_mean
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,continued_retain,1,0.07129292842000723,0.0,4.129532337188721,0.0,0.017571600154042244
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,counterfactual,1,0.10783689469099045,0.0,4.099610090255737,0.0,0.01957583613693714
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,exact_retrain,1,2.1856185083990454e-08,0.0,4.066104888916016,0.0,0.04515577666461468
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,gradient_ascent,1,0.13002124056220055,0.0,4.079218864440918,0.0,0.24804318509995937
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,npo,1,0.07646417059004307,0.0,4.075068235397339,0.0,0.5169725771993399
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,pcgu,1,0.17624330148100853,0.0,4.079258918762207,0.0,0.05443235673010349
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,sham,1,0.17592214420437813,0.0,4.079795837402344,0.0,0.0033603161573410034
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,trained_full,1,0.17533604055643082,0.0,4.085110664367676,0.0,1.0565314274281263
+controlled-smoke-v1-6207616e,controlled-smoke-v1,901cafbbd16710fea2b9ed845b5d23b19e465a42,tiny-association-fixture,untouched,1,0.5843778550624847,0.0,3.8029911518096924,0.0,0.0037357881665229797

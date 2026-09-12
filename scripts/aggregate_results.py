@@ -59,7 +59,7 @@ def main() -> None:
     output.mkdir(parents=True, exist_ok=True)
     fields = list(rows[0]) if rows else ["model", "method", "seeds"]
     with (output / "summary.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     lines = ["| " + " | ".join(fields) + " |", "| " + " | ".join(["---"] * len(fields)) + " |"]

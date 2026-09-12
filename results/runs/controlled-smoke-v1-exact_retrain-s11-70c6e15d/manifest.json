@@ -1,0 +1,152 @@
+{
+  "attributed_setup_runtime_seconds": 0.04161340370774269,
+  "checkpoint_size_bytes": 14697,
+  "claim_status": "exploratory",
+  "configuration": {
+    "experiment": {
+      "config_path": "configs/experiments/smoke.yaml",
+      "dataset": "controlled_v1",
+      "dataset_config": {
+        "builder": "scripts/prepare_data.py",
+        "license": "CC0-1.0",
+        "name": "controlled-associations-v1",
+        "path": "data/controlled/v1",
+        "version": 1
+      },
+      "method_configs": {
+        "continued_retain": {
+          "learning_rate": 0.15,
+          "name": "continued_retain",
+          "steps": 15
+        },
+        "counterfactual": {
+          "learning_rate": 0.15,
+          "name": "counterfactual",
+          "steps": 15
+        },
+        "exact_retrain": {
+          "name": "exact_retrain",
+          "trainable": true
+        },
+        "gradient_ascent": {
+          "learning_rate": 0.03,
+          "name": "gradient_ascent",
+          "retain_weight": 1.0,
+          "steps": 8
+        },
+        "npo": {
+          "beta": 0.1,
+          "learning_rate": 0.05,
+          "name": "npo",
+          "reference": "trained_full",
+          "retain_weight": 1.0,
+          "steps": 12
+        },
+        "pcgu": {
+          "learning_rate": 0.15,
+          "name": "pcgu",
+          "partition_aggregation_dimension": -1,
+          "ranking": "ascending_cosine_similarity",
+          "selected_fraction": 0.1,
+          "source": "https://aclanthology.org/2023.findings-acl.375/",
+          "steps": 12,
+          "update_gradient": "replacement_target"
+        },
+        "sham": {
+          "name": "sham",
+          "update_l2_norm": 0.05
+        },
+        "trained_full": {
+          "name": "trained_full",
+          "trainable": false
+        },
+        "untouched": {
+          "name": "untouched",
+          "trainable": false
+        }
+      },
+      "methods": [
+        "untouched",
+        "trained_full",
+        "exact_retrain",
+        "continued_retain",
+        "sham",
+        "counterfactual",
+        "gradient_ascent",
+        "npo",
+        "pcgu"
+      ],
+      "model": "tiny_fixture",
+      "model_config": {
+        "backend": "tiny_association",
+        "hidden_size": 24,
+        "intended_use": "CI and pipeline calibration only",
+        "name": "tiny-association-fixture",
+        "revision": "unlearn-bench-v1",
+        "tokenizer_revision": "unlearn-bench-v1"
+      },
+      "name": "controlled-smoke-v1",
+      "primary_endpoints": {
+        "forgetting": "forget_oracle_kl",
+        "utility": "utility_nll"
+      },
+      "seeds": [
+        11
+      ],
+      "track": "controlled_unlearning",
+      "training": {
+        "learning_rate": 0.2,
+        "steps": 50
+      }
+    },
+    "method": {
+      "name": "exact_retrain",
+      "trainable": true
+    }
+  },
+  "dataset": "controlled_v1",
+  "dataset_hashes": {
+    "test": "d454b59a2666941a050ac16b28dff64ba75356281ce21538df2c7b545e178ab4",
+    "train": "6f393e27c4f07702825b7071908a5e33e527bd546fa840800a64713d93cc13d4",
+    "validation": "1af1e9f85b1646b4572ce1246a87dd910f471b3a762ddff8cc97c937aa1dfee8"
+  },
+  "experiment_name": "controlled-smoke-v1",
+  "final_checkpoint_path": "results/runs/controlled-smoke-v1-exact_retrain-s11-70c6e15d/checkpoint.pt",
+  "git_commit": "901cafbbd16710fea2b9ed845b5d23b19e465a42",
+  "hardware": {
+    "cpu": "x86_64",
+    "cuda_available": false,
+    "gpu": null,
+    "hostname": "sg034",
+    "platform": "Linux-4.18.0-553.124.1.el8_10.x86_64-x86_64-with-glibc2.28"
+  },
+  "intervention_runtime_seconds": 0.0035423729568719864,
+  "method": "exact_retrain",
+  "method_metadata": {},
+  "metrics_path": "results/runs/controlled-smoke-v1-exact_retrain-s11-70c6e15d/metrics.json",
+  "model_name": "tiny-association-fixture",
+  "model_repository": null,
+  "model_revision": "unlearn-bench-v1",
+  "peak_vram_bytes": 0,
+  "predictions_path": "results/runs/controlled-smoke-v1-exact_retrain-s11-70c6e15d/predictions.jsonl",
+  "random_seed": 11,
+  "run_id": "controlled-smoke-v1-exact_retrain-s11-70c6e15d",
+  "run_set_id": "controlled-smoke-v1-6207616e",
+  "runtime_seconds": 0.04515577666461468,
+  "schema_version": 1,
+  "split_hashes": {
+    "forget": "2c939db0264ebc3d9a9922d4a97b6fcce94f5201d381b15252fc106356968eb8",
+    "retain": "a43ca9ee3c2ac353a2a3dc738a1995d6ed07a617cab935e1623bf3e95368e962",
+    "utility": "6cefe0b21880c7e8acf96d10eb19568436bedf434ee29660eaf6f972e204f220"
+  },
+  "timestamp_utc": "2026-09-12T00:54:57.440537+00:00",
+  "tokenizer_revision": "unlearn-bench-v1",
+  "track": "controlled_unlearning",
+  "trainable_parameters": 2989,
+  "versions": {
+    "cuda": "12.4",
+    "python": "3.12.9",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.51.3"
+  }
+}

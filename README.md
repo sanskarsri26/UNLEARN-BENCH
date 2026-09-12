@@ -69,6 +69,10 @@ machine-readable manifests, regenerated metrics, an aggregate table, and a forge
 These are engineering validation artifacts, classified **EXPLORATORY**, and support no substantive
 model-unlearning claim. No confirmatory main result exists yet.
 
+Canonical artifacts: [aggregate table](reports/tables/summary.md),
+[trade-off figure](reports/figures/forgetting_utility_pareto.png), and
+[compute calibration](reports/compute_budget.md).
+
 ## Reproducibility
 
 ```bash

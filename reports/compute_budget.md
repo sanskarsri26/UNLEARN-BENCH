@@ -1,10 +1,11 @@
 # Compute budget (awaiting GPU calibration)
 
-The CPU fixture passed all nine configured methods on 2026-09-12. The method-level manifest times
-sum to 1.725 seconds; the full command, including creation of shared full-training and exact-retrain
-checkpoints, took 11.05 seconds. It evaluated 108 method/example pairs (a coarse 62.6 pairs/second
-over method-level time), allocated 0 GPU bytes, and wrote nine 14,697-byte checkpoints (132,273
-bytes total). This validates plumbing only and is not a substitute for a Pythia/Mamba GPU estimate.
+The canonical CPU fixture passed all nine configured methods on 2026-09-12 from commit `901cafb`.
+The attributed per-run times sum to 1.965 seconds; the full command, including creation of shared
+full-training and exact-retrain checkpoints, took 6.37 seconds. It evaluated 108 method/example
+pairs (a coarse 55.0 pairs/second over attributed run time), allocated 0 GPU bytes, and wrote nine
+14,697-byte checkpoints (132,273 bytes total). This validates plumbing only and is not a substitute
+for a Pythia/Mamba GPU estimate.
 
 Provisional main matrix (frozen for costing, not authorized for execution):
 
