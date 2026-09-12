@@ -17,6 +17,15 @@ def main() -> None:
     parser.add_argument("--device", choices=("auto", "cuda", "mps", "cpu"))
     parser.add_argument("--precision", choices=("auto", "fp32", "fp16", "bf16"))
     parser.add_argument("--allow-mps-fallback", action="store_true", default=None)
+    parser.add_argument(
+        "--method",
+        help="run one configured method (exploratory configs only)",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        help="run one configured seed (exploratory configs only)",
+    )
     args = parser.parse_args()
     overrides = {
         key: value
@@ -27,6 +36,10 @@ def main() -> None:
         }.items()
         if value is not None
     }
+    if args.method is not None:
+        overrides["methods"] = [args.method]
+    if args.seed is not None:
+        overrides["seeds"] = [args.seed]
     run_ids = run_experiment(ROOT / args.config, ROOT, overrides=overrides)
     print("Terminal run cells (completed or explicitly failed):")
     for run_id in run_ids:

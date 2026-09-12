@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import os
@@ -345,7 +346,17 @@ def write_report(overall: list[dict], deltas: list[dict], category_deltas: list[
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Validate and analyze exploratory Track B cells")
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="check hashes, coverage, and recomputed metrics without writing reports",
+    )
+    args = parser.parse_args()
     cells = validate_and_load()
+    if args.validate_only:
+        print("Validated all 54 exploratory Track B cells")
+        return
     overall, categories = aggregate(cells)
     deltas = paired_deltas(cells)
     category_deltas = paired_category_deltas(cells)

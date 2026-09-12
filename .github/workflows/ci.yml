@@ -21,3 +21,5 @@ jobs:
       - name: CPU fixture smoke
         run: python scripts/run_experiment.py --config configs/experiments/smoke.yaml
       - run: python scripts/validate_results.py
+      - name: Validate Track B hashes and recomputed metrics
+        run: python scripts/analyze_track_b.py --validate-only
